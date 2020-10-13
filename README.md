@@ -11,7 +11,7 @@ npm i json2html-lib --save
 ## Requirements
 
 Only for demo:
-- Angular 9.1.0 and more
+- Angular 10.0.0 and more
 
 ## Demo
 
@@ -21,34 +21,14 @@ Only for demo:
 
 ### Examples 
 
-#### changeLuminosity
-
 ```typescript
-import {json2html} from 'json2html-lib';
+import {Json2html} from 'json2html';
 
-const color = new json2html('red');
+const color = new Json2html('red');
 color.changeLuminosity(0.55);
 console.log(color.toHEX()); // #ff8c8c 
 ```
 
-#### maskColor
-
-```typescript
-const color = new json2html('red');
-color.maskColor('blue', 0.25);
-console.log(color.toHEX()); // #bf0040
-```
-
-#### addColor
-
-```typescript
-const color = new json2html('red');
-color.addColor({
-    h: -23,
-    v: 10,
-    alpha: -0.2
-});
-console.log(color.toHEX()); // #ff3381cc
 ```
 
 ## Publishing the library

@@ -12,8 +12,23 @@ export class AppComponent {
 
     console.log(new Json2html({
       tag: 'div',
-      attrs: { 'id': 'test', 'class': 'testclasse' },
+      attrs: { id: 'test', class: 'testclasse' },
       body: 'test'
+    }, { formatting: 'multiline' }).toString());
+
+    console.log(new Json2html({
+      tag: 'div',
+      attrs: { id: 'test', class: 'testclasse', test: null },
+      body: [
+        'test',
+        {
+          tag: 'div',
+          attrs: { id: 'test', class: 'testclasse', test: null },
+          body: [
+            'test2'
+          ]
+        }
+      ]
     }).toString());
 
   }
