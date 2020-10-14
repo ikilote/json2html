@@ -1,21 +1,24 @@
 
-export interface Json2htmlAttr { [key: string]: string | number | undefined | null }
+export interface Json2htmlAttr {
+    [key: string]: string | number | null;
+}
 
 export interface Json2htmlRef {
-    tag: string,
-    attrs?: Json2htmlAttr,
-    body?: (Json2htmlRef | string)[] | string
+    tag: string;
+    attrs?: Json2htmlAttr;
+    body?: (Json2htmlRef | string)[] | string;
 }
 
 export interface Json2htmlOptions {
     formatting?: 'inline' | 'multiline';
-    spaceType?: 'space' | 'tab',
-    spaceLength?: 4,
-    spaceBase?: 0,
-    maxLenght?: 0,
-    attrPosition?: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr',
-    type?: 'html' | 'xml',
-    indent?: boolean
+    spaceType?: 'space' | 'tab';
+    spaceLength?: number;
+    spaceBase?: number;
+    maxLenght?: number;
+    attrPosition?: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr';
+    // type?: 'html' | 'xml';
+    indent?: boolean;
+    noContentTags?: string[];
 }
 
 export class Json2html {
@@ -26,10 +29,28 @@ export class Json2html {
         spaceBase: 0,
         maxLenght: 0,
         attrPosition: 'alignFirstAttr',
-        type: 'html',
+        // type: 'html',
         formatting: 'multiline',
-        indent: true
-    }
+        indent: true,
+        noContentTags: [
+            'area',
+            'base',
+            'br',
+            'col',
+            'command',
+            'embed',
+            'hr',
+            'img',
+            'input',
+            'keygen',
+            'link',
+            'meta',
+            'param',
+            'source',
+            'track',
+            'wbr'
+        ]
+    };
 
     constructor(
         public json: Json2htmlRef,
@@ -39,54 +60,50 @@ export class Json2html {
     }
 
     toString() {
-        return this._generate(0, this.json);
+        return `${this._getSpacing(0)}${this._generate(0, this.json)}`;
     }
 
     private _generate(lvl: number, json: Json2htmlRef) {
-        const tagBegin = `<${json.tag}${this._generateAttrs(lvl, json)}>`
-        let tagcontent = this._generateHtml(lvl, json);
-        if (tagcontent) {
-            if (this._hasMultiline()) {
+        const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
+        let string = `<${json.tag}${this._generateAttrs(lvl, json)}>`;
+        if (hasContent) {
+            let tagcontent = this._generateHtml(lvl, json);
+            if (tagcontent && this._hasMultiline()) {
                 tagcontent = `${tagcontent}\n${this._getSpacing(lvl)}`;
             }
+            string += `${tagcontent}</${json.tag}>`;
         }
-        const tagEnd = `</${json.tag}>`;
-
-        return `${tagBegin}${tagcontent}${tagEnd}`;
+        return string;
     }
 
     private _generateAttrs(lvl: number, json: Json2htmlRef) {
         let string = '';
-        let attrs = json.attrs;
+        const attrs = json.attrs;
         if (json.attrs && Object.keys(json.attrs).length) {
-            for (let id in json.attrs) {
-                switch (this.options.attrPosition) {
-                    case 'inline':
-                        string += ' ';
-                        break;
-                    case 'space':
-                        if (string && this.options.indent) {
-                            string += `\n${this._getSpacing(lvl + 1)}`;
-                        } else {
+            for (const id in json.attrs) {
+                if (json.attrs[id] !== undefined) {
+                    switch (this.options.attrPosition) {
+                        case 'inline':
                             string += ' ';
-                        };
-                        break;
-                    case 'alignTag':
-                        if (string && this.options.indent) {
-                            string += `\n${this._getSpacing(lvl, 1)}`;
-                        } else {
-                            string += ' ';
-                        };
-                        break;
-                    case 'alignFirstAttr':
-                        if (string && this.options.indent) {
-                            string += `\n${this._getSpacing(lvl, this.json.tag.length + 2)}`;
-                        } else {
-                            string += ' ';
-                        };
-                        break;
+                            break;
+                        case 'space':
+                            string += string && this.options.indent && this._hasMultiline()
+                                ? `\n${this._getSpacing(lvl + 1)}`
+                                : string += ' ';
+                            break;
+                        case 'alignTag':
+                            string += string += string && this.options.indent && this._hasMultiline()
+                                ? `\n${this._getSpacing(lvl, 1)}`
+                                : ' ';
+                            break;
+                        case 'alignFirstAttr':
+                            string += string += string && this.options.indent && this._hasMultiline()
+                                ? `\n${this._getSpacing(lvl, this.json.tag.length + 2)}`
+                                : ' ';
+                            break;
+                    }
+                    string += `${id}${json.attrs[id] !== null || json.attrs[id] ? `="${json.attrs[id]}"` : ''}`;
                 }
-                string += `${id}${json.attrs[id] !== null || json.attrs[id] !== undefined ? `="${json.attrs[id]}"` : ''}`;
             }
         }
         return string;
@@ -105,12 +122,10 @@ export class Json2html {
                     if (this._hasMultiline()) {
                         string += `\n${this._getSpacing(lvl + 1)}`;
                     }
-                    if (typeof element === 'string') {
-                        string += element;
-                    } else {
-                        string += this._generate(lvl + 1, element);
-                    }
-                })
+                    string += typeof element === 'string'
+                        ? element
+                        : this._generate(lvl + 1, element);
+                });
             }
         }
         return string;

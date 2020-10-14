@@ -12,9 +12,15 @@ export class AppComponent {
 
     console.log(new Json2html({
       tag: 'div',
-      attrs: { id: 'test', class: 'testclasse' },
-      body: 'test'
-    }, { formatting: 'multiline' }).toString());
+      attrs: { id: 'test1', class: 'testclasse' },
+      body: ['test',
+        {
+          tag: 'div',
+          attrs: { id: 'test2', class: 'foobar' },
+          body: 'test'
+        }
+      ]
+    }, { formatting: 'inline' }).toString());
 
     console.log(new Json2html({
       tag: 'div',
@@ -23,12 +29,29 @@ export class AppComponent {
         'test',
         {
           tag: 'div',
-          attrs: { id: 'test', class: 'testclasse', test: null },
+          attrs: { id: 'test-div', class: 'foo' },
+          body: [
+            'test2',
+            {
+              tag: 'div',
+              attrs: { id: 'test-subdiv', class: 'foobar' },
+              body: 'test3'
+            }
+          ]
+        },
+        {
+          tag: 'hr'
+        },
+        {
+          tag: 'span',
+          attrs: { id: 'test-span', class: 'bar', },
           body: [
             'test2'
           ]
-        }
+        },
       ]
+    }, {
+      spaceBase: 5
     }).toString());
 
   }
