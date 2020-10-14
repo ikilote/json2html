@@ -13,9 +13,11 @@ npm i json2html-lib --save
 Only for demo:
 - Angular 10.0.0 and more
 
+<!--
 ## Demo
 
 [See a live demonstation](http://test.ikilote.net/json2html-demo/)
+-->
 
 ## Usage
 
@@ -27,14 +29,26 @@ import { Json2html } from 'json2html-lib';
 console.log(new Json2html({
       tag: 'div',
       attrs: { id: 'test1', class: 'testclasse' },
-      body: ['test',
+      body: [
+        'test',
         {
           tag: 'div',
           attrs: { id: 'test2', class: 'foobar' },
           body: 'test'
         }
       ]
-    }, { formatting: 'inline' }).toString());
+    }, { formatting: 'multiline' }).toString());
+/*
+<div id="test1"
+     class="testclasse">
+    test
+    <div id="test2"
+         class="foobar">
+        test
+    </div>
+</div>
+*/
+
 ```
 
 ## Publishing the library

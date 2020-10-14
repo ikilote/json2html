@@ -3,10 +3,12 @@ export interface Json2htmlAttr {
     [key: string]: string | number | null;
 }
 
+export type Json2htmlBody = (Json2htmlRef | string)[] | Json2htmlRef | string;
+
 export interface Json2htmlRef {
     tag: string;
     attrs?: Json2htmlAttr;
-    body?: (Json2htmlRef | string)[] | string;
+    body?: Json2htmlBody;
 }
 
 export interface Json2htmlOptions {
@@ -53,21 +55,29 @@ export class Json2html {
     };
 
     constructor(
-        public json: Json2htmlRef,
+        public json: Json2htmlRef | Json2htmlRef[],
         option: Json2htmlOptions = {}
     ) {
         Object.assign(this.options, option);
     }
 
     toString() {
-        return `${this._getSpacing(0)}${this._generate(0, this.json)}`;
+        let html = '';
+        if (!Array.isArray(this.json)) {
+            html = `${this._getSpacing(0)}${this._generate(0, this.json)}`;
+        } else {
+            this.json.forEach((element, index) => {
+                html += `${index > 0 ? '\n' : ''}${this._getSpacing(0)}${this._generate(0, element)}`;
+            });
+        }
+        return html;
     }
 
     private _generate(lvl: number, json: Json2htmlRef) {
         const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
         let string = `<${json.tag}${this._generateAttrs(lvl, json)}>`;
         if (hasContent) {
-            let tagcontent = this._generateHtml(lvl, json);
+            let tagcontent = this._generateBody(lvl, json);
             if (tagcontent && this._hasMultiline()) {
                 tagcontent = `${tagcontent}\n${this._getSpacing(lvl)}`;
             }
@@ -111,7 +121,7 @@ export class Json2html {
         return string;
     }
 
-    private _generateHtml(lvl: number, json: Json2htmlRef) {
+    private _generateBody(lvl: number, json: Json2htmlRef) {
         let string = '';
         if (json.body) {
             if (typeof json.body === 'string') {
@@ -119,17 +129,25 @@ export class Json2html {
                     string = `\n${this._getSpacing(lvl + 1)}`;
                 }
                 string += json.body;
+            } else if (!Array.isArray(json.body)) {
+                string += this._generateBodyElement(lvl, json);
             } else {
-                json.body.forEach((element) => {
-                    if (this._hasMultiline()) {
-                        string += `\n${this._getSpacing(lvl + 1)}`;
-                    }
-                    string += typeof element === 'string'
-                        ? element
-                        : this._generate(lvl + 1, element);
+                json.body.forEach(element => {
+                    string += this._generateBodyElement(lvl, element);
                 });
             }
         }
+        return string;
+    }
+
+    private _generateBodyElement(lvl: number, element: Json2htmlRef | string): string {
+        let string = '';
+        if (this._hasMultiline()) {
+            string += `\n${this._getSpacing(lvl + 1)}`;
+        }
+        string += typeof element === 'string'
+            ? element
+            : this._generate(lvl + 1, element);
         return string;
     }
 
