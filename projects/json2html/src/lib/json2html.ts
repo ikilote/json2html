@@ -79,30 +79,32 @@ export class Json2html {
     private _generateAttrs(lvl: number, json: Json2htmlRef) {
         let string = '';
         const attrs = json.attrs;
-        if (json.attrs && Object.keys(json.attrs).length) {
-            for (const id in json.attrs) {
-                if (json.attrs[id] !== undefined) {
+        if (attrs && Object.keys(attrs).length) {
+            for (const id in attrs) {
+                if (attrs[id] !== undefined) {
+                    let attr = '';
                     switch (this.options.attrPosition) {
                         case 'inline':
-                            string += ' ';
+                            attr += ' ';
                             break;
                         case 'space':
-                            string += string && this.options.indent && this._hasMultiline()
+                            attr += string && this.options.indent && this._hasMultiline()
                                 ? `\n${this._getSpacing(lvl + 1)}`
                                 : string += ' ';
                             break;
                         case 'alignTag':
-                            string += string += string && this.options.indent && this._hasMultiline()
+                            attr += string && this.options.indent && this._hasMultiline()
                                 ? `\n${this._getSpacing(lvl, 1)}`
                                 : ' ';
                             break;
                         case 'alignFirstAttr':
-                            string += string += string && this.options.indent && this._hasMultiline()
-                                ? `\n${this._getSpacing(lvl, this.json.tag.length + 2)}`
+                            attr += string && this.options.indent && this._hasMultiline()
+                                ? `\n${this._getSpacing(lvl, json.tag.length + 2)}`
                                 : ' ';
                             break;
                     }
-                    string += `${id}${json.attrs[id] !== null || json.attrs[id] ? `="${json.attrs[id]}"` : ''}`;
+                    attr += `${id}${attrs[id] !== null || attrs[id] ? `="${attrs[id]}"` : ''}`;
+                    string += attr;
                 }
             }
         }
