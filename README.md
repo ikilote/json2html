@@ -1,11 +1,11 @@
-[![npm version](https://badge.fury.io/js/@zaide/json2html.svg)](https://badge.fury.io/js/@zaide/json2html) [![Downloads](https://img.shields.io/npm/dm/@zaide/json2html.svg)](https://www.npmjs.com/package/@zaide/json2html) [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://git.ikilote.net/angular/json2html/raw/master/LICENSE)
+[![npm version](https://badge.fury.io/js/json2html-lib.svg)](https://badge.fury.io/js/json2html-lib) [![Downloads](https://img.shields.io/npm/dm/json2html-lib.svg)](https://www.npmjs.com/package/json2html-lib) [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://git.ikilote.net/angular/json2html/raw/master/LICENSE)
 
 # json2html
 
 ## Installation
 
 ```
-npm i @zaide/json2html --save
+npm i json2html-lib --save
 ```
 
 ## Requirements
@@ -22,7 +22,7 @@ Only for demo:
 ### Examples 
 
 ```typescript
-import { Json2html } from '@zaide/json2html';
+import { Json2html } from 'json2html-lib';
 
 console.log(new Json2html({
       tag: 'div',

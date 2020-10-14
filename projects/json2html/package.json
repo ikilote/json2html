@@ -1,5 +1,5 @@
 {
-  "name": "@zaide/json2html",
+  "name": "json2html-lib",
   "version": "0.0.1",
   "license": "MIT",
   "repository": {
@@ -9,5 +9,12 @@
   "peerDependencies": {},
   "dependencies": {
     "tslib": "^2.0.0"
-  }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com"
+  },
+  "bugs": {
+    "url": "https://git.ikilote.net/angular/json2html/-/issues"
+  },
+  "homepage": "https://git.ikilote.net/angular/json2html"
 }
