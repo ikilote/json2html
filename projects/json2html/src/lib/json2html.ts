@@ -6,20 +6,46 @@ export interface Json2htmlAttr {
 export type Json2htmlBody = (Json2htmlRef | string)[] | Json2htmlRef | string;
 
 export interface Json2htmlRef {
+    /** tag name */
     tag: string;
+    /** attributes */
     attrs?: Json2htmlAttr;
+    /** content of tag */
     body?: Json2htmlBody;
+    /** inline : override formatting option for this element and these children */
+    inline?: boolean;
+    /** autoclose (XML only) */
+    autoclose?: boolean;
 }
 
 export interface Json2htmlOptions {
+    /**
+     * format of the rendered structure:
+     * * `inline`: all on one line without space
+     * * `multiline`: structure sur plusieur lignes avec indentation possible
+     */
     formatting?: 'inline' | 'multiline';
+    /** type d'indentation `space` or `tab` */
     spaceType?: 'space' | 'tab';
+    /** size of each level of the indentation  */
     spaceLength?: number;
+    /** size of the indentation before each line */
     spaceBase?: number;
+    /** maximum number of characters for a line */
     maxLenght?: number;
+    /**
+     * attribute alignment:
+     * * `inline`: no alignment
+     * * `space`: alignment with higher level
+     * * `alignTag`: alignment with the tag
+     * * `alignFirstAttr`: alignment with the first attribute
+     */
     attrPosition?: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr';
-    // type?: 'html' | 'xml';
+    /** Format of the targeted structure */
+    type?: 'html' | 'xml';
+    /** active of not en indentation. If false, these options are ignored : `spaceType`, `spaceLength` */
     indent?: boolean;
+    /** list of HTML tags without content */
     noContentTags?: string[];
 }
 
@@ -31,7 +57,7 @@ export class Json2html {
         spaceBase: 0,
         maxLenght: 0,
         attrPosition: 'alignFirstAttr',
-        // type: 'html',
+        type: 'html',
         formatting: 'multiline',
         indent: true,
         noContentTags: [
@@ -54,6 +80,10 @@ export class Json2html {
         ]
     };
 
+    /**
+     * @param json one ou list of node data
+     * @param option formating options
+     */
     constructor(
         public json: Json2htmlRef | Json2htmlRef[],
         option: Json2htmlOptions = {}
@@ -61,6 +91,9 @@ export class Json2html {
         Object.assign(this.options, option);
     }
 
+    /**
+     * rendering in string
+     */
     toString() {
         let html = '';
         if (!Array.isArray(this.json)) {
@@ -73,7 +106,13 @@ export class Json2html {
         return html;
     }
 
-    private _generate(lvl: number, json: Json2htmlRef) {
+    /**
+     * generation in string for a node (tag with attributes and content)
+     * @param lvl node level
+     * @param json node data
+     * @returns render of node
+     */
+    private _generate(lvl: number, json: Json2htmlRef): string {
         const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
         let string = `<${json.tag}${this._generateAttrs(lvl, json)}>`;
         if (hasContent) {
@@ -86,6 +125,12 @@ export class Json2html {
         return string;
     }
 
+    /**
+     * attributes list generation
+     * @param lvl level node
+     * @param json node data
+     * @returns attributes tag
+     */
     private _generateAttrs(lvl: number, json: Json2htmlRef) {
         let string = '';
         const attrs = json.attrs;
@@ -121,6 +166,12 @@ export class Json2html {
         return string;
     }
 
+    /**
+     * tag body generation
+     * @param lvl level node
+     * @param json node data
+     * @returns render of body
+     */
     private _generateBody(lvl: number, json: Json2htmlRef) {
         let string = '';
         if (json.body) {
@@ -140,6 +191,12 @@ export class Json2html {
         return string;
     }
 
+    /**
+     * tag body generation for one node
+     * @param lvl level node
+     * @param element node data or string
+     * @returns render of body
+     */
     private _generateBodyElement(lvl: number, element: Json2htmlRef | string): string {
         let string = '';
         if (this._hasMultiline()) {
@@ -151,14 +208,23 @@ export class Json2html {
         return string;
     }
 
+    /**
+     * if multiline rendering
+     */
     private _hasMultiline(): boolean {
         return this.options.formatting === 'multiline';
     }
 
-    private _getSpacing(lvl: number, ajout: number = 0): string {
+    /**
+     * calculating the number of spaces for indentation
+     * @param lvl level
+     * @param addition space of space (only space, no tabulation)
+     * @returns space
+     */
+    private _getSpacing(lvl: number, addition: number = 0): string {
         return this.options.indent
             ? (this.options.spaceType === 'space' ? ' ' : '\t')
-                .repeat((lvl + this.options.spaceBase) * this.options.spaceLength + ajout)
+                .repeat((lvl + this.options.spaceBase) * this.options.spaceLength) + ' '.repeat(addition)
             : '';
     }
 
