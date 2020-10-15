@@ -1,5 +1,11 @@
 # Changelog of json2html-lib
 
+## V0.0.4 (2020-10-15)
+
+- add `xml` type of render
+- code comments
+- fix minor bugs
+
 ## V0.0.3 (2020-10-14)
 
 - change to accept lists of elements or not
