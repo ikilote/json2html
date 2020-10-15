@@ -32,7 +32,7 @@ export interface Json2htmlOptions {
     /** size of the indentation before each line */
     spaceBase?: number;
     /** maximum number of characters for a line */
-    maxLenght?: number;
+    // maxLenght?: number;
     /**
      * attribute alignment:
      * * `inline`: no alignment
@@ -43,6 +43,8 @@ export interface Json2htmlOptions {
     attrPosition?: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr';
     /** Format of the targeted structure */
     type?: 'html' | 'xml';
+    /** in XML mode, auto generated tag if the only text alongside other tags */
+    xmlDefaultTag?: string;
     /** active of not en indentation. If false, these options are ignored : `spaceType`, `spaceLength` */
     indent?: boolean;
     /** list of HTML tags without content */
@@ -55,11 +57,12 @@ export class Json2html {
         spaceType: 'space',
         spaceLength: 4,
         spaceBase: 0,
-        maxLenght: 0,
+        // maxLenght: 0,
         attrPosition: 'alignFirstAttr',
         type: 'html',
         formatting: 'multiline',
         indent: true,
+        xmlDefaultTag: 'span',
         noContentTags: [
             'area',
             'base',
@@ -114,7 +117,8 @@ export class Json2html {
      */
     private _generate(lvl: number, json: Json2htmlRef): string {
         const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
-        let string = `<${json.tag}${this._generateAttrs(lvl, json)}>`;
+        const xmlAutoClose = !hasContent && this.options.type === 'xml' ? '/' : '';
+        let string = `<${json.tag}${this._generateAttrs(lvl, json)}${xmlAutoClose}>`;
         if (hasContent) {
             let tagcontent = this._generateBody(lvl, json);
             if (tagcontent && this._hasMultiline()) {
@@ -175,16 +179,11 @@ export class Json2html {
     private _generateBody(lvl: number, json: Json2htmlRef) {
         let string = '';
         if (json.body) {
-            if (typeof json.body === 'string') {
-                if (this._hasMultiline()) {
-                    string = `\n${this._getSpacing(lvl + 1)}`;
-                }
-                string += json.body;
-            } else if (!Array.isArray(json.body)) {
-                string += this._generateBodyElement(lvl, json);
+            if (!Array.isArray(json.body)) {
+                string += this._generateBodyElement(lvl, json.body, true);
             } else {
                 json.body.forEach(element => {
-                    string += this._generateBodyElement(lvl, element);
+                    string += this._generateBodyElement(lvl, element, false);
                 });
             }
         }
@@ -195,13 +194,23 @@ export class Json2html {
      * tag body generation for one node
      * @param lvl level node
      * @param element node data or string
+     * @param onlyOne body this an unique node
      * @returns render of body
      */
-    private _generateBodyElement(lvl: number, element: Json2htmlRef | string): string {
+    private _generateBodyElement(lvl: number, element: Json2htmlRef | string, onlyOne: boolean): string {
         let string = '';
         if (this._hasMultiline()) {
             string += `\n${this._getSpacing(lvl + 1)}`;
         }
+
+        // in XML mode, for generate a valid XML structure
+        if (!onlyOne && this.options.type === 'xml' && typeof element === 'string') {
+            element = {
+                tag: this.options.xmlDefaultTag,
+                body: element
+            };
+        }
+
         string += typeof element === 'string'
             ? element
             : this._generate(lvl + 1, element);

@@ -50,7 +50,7 @@ export class AppComponent {
                     body: [
                         'test2'
                     ]
-                },
+                }
             ]
         },
         {
@@ -60,7 +60,8 @@ export class AppComponent {
                 'test2'
             ]
         }], {
-            spaceBase: 5
+            spaceBase: 5,
+            type: 'xml'
         }).toString());
 
     }
