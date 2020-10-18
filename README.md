@@ -13,11 +13,9 @@ npm i json2html-lib --save
 Only for demo:
 - Angular 10.0.0 and more
 
-<!--
 ## Demo
 
 [See a live demonstation](http://test.ikilote.net/json2html-demo/)
--->
 
 ## Usage
 
@@ -48,7 +46,6 @@ console.log(new Json2html({
     </div>
 </div>
 */
-
 ```
 
 ## Publishing the library

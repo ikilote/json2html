@@ -1,5 +1,10 @@
 # Changelog of json2html-lib
 
+## V0.0.5 (2020-10-18)
+
+- fix numeric options
+- add demo
+
 ## V0.0.4 (2020-10-15)
 
 - add `xml` type of render
