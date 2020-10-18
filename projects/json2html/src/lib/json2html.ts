@@ -233,7 +233,7 @@ export class Json2html {
     private _getSpacing(lvl: number, addition: number = 0): string {
         return this.options.indent
             ? (this.options.spaceType === 'space' ? ' ' : '\t')
-                .repeat((lvl + this.options.spaceBase) * this.options.spaceLength) + ' '.repeat(addition)
+                .repeat((lvl + +this.options.spaceBase) * +this.options.spaceLength) + ' '.repeat(addition)
             : '';
     }
 
