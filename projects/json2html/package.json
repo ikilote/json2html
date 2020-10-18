@@ -4,7 +4,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://git.ikilote.net/angular/json2html"
+    "url": "https://git.ikilote.net/typescript/json2html"
   },
   "peerDependencies": {},
   "dependencies": {
@@ -14,9 +14,9 @@
     "registry": "https://registry.npmjs.org"
   },
   "bugs": {
-    "url": "https://git.ikilote.net/angular/json2html/-/issues"
+    "url": "https://git.ikilote.net/typescript/json2html/-/issues"
   },
-  "homepage": "https://git.ikilote.net/angular/json2html",
+  "homepage": "https://git.ikilote.net/typescript/json2html",
   "keywords": [
     "typescript",
     "html",

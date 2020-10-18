@@ -4,7 +4,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://git.ikilote.net/angular/json2html"
+    "url": "https://git.ikilote.net/typescript/json2html"
   },
   "scripts": {
     "ng": "ng",
