@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 
-import { Json2html } from 'projects/json2html/src/public_api';
+import { Json2html, Json2htmlRef, Json2htmlOptions } from 'projects/json2html/src/public_api';
+
+import { examples } from './app.json';
 
 @Component({
     selector: 'app-root',
@@ -9,60 +11,69 @@ import { Json2html } from 'projects/json2html/src/public_api';
 })
 export class AppComponent {
 
+    // options
+    spaceType: 'space' | 'tab' = 'space';
+    spaceLength = 4;
+    spaceBase = 0;
+    // maxLenght= 0;
+    attrPosition: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr' = 'alignFirstAttr';
+    type: 'html' | 'xml' = 'html';
+    formatting: 'inline' | 'multiline' = 'multiline';
+    indent = true;
+    xmlDefaultTag = 'span';
+    noContentTags = [
+        'area',
+        'base',
+        'br',
+        'col',
+        'command',
+        'embed',
+        'hr',
+        'img',
+        'input',
+        'keygen',
+        'link',
+        'meta',
+        'param',
+        'source',
+        'track',
+        'wbr'
+    ].toString();
+
+    data: Json2htmlRef | Json2htmlRef[];
+    html: string;
+
     constructor() {
+        this.updateExample(1);
+    }
 
-        console.log(new Json2html({
-            tag: 'div',
-            attrs: { id: 'test1', class: 'testclasse' },
-            body: [
-                'test',
-                {
-                    tag: 'div',
-                    attrs: { id: 'test2', class: 'foobar' },
-                    body: 'test'
-                }
-            ]
-        }, { formatting: 'multiline' }).toString());
+    updateExample(number: number) {
+        this.data = examples[number];
+        this.generated();
+    }
 
-        console.log(new Json2html([{
-            tag: 'div',
-            attrs: { id: 'test', class: 'testclasse', test: null },
-            body: [
-                'test',
-                {
-                    tag: 'div',
-                    attrs: { id: 'test-div', class: 'foo' },
-                    body: [
-                        'test2',
-                        {
-                            tag: 'div',
-                            attrs: { id: 'test-subdiv', class: 'foobar' },
-                            body: 'test3'
-                        }
-                    ]
-                },
-                {
-                    tag: 'hr'
-                },
-                {
-                    tag: 'span',
-                    attrs: { id: 'test-span', class: 'bar' },
-                    body: [
-                        'test2'
-                    ]
-                }
-            ]
-        },
-        {
-            tag: 'span',
-            attrs: { id: 'attr-2', class: 'bar' },
-            body: [
-                'test2'
-            ]
-        }], {
-            spaceBase: 5,
-            type: 'xml'
-        }).toString());
+    format(json: string) {
+        try {
+            this.data = JSON.parse(json);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
+    generated() {
+        const options: Json2htmlOptions = {
+            spaceType: this.spaceType,
+            spaceLength: this.spaceLength,
+            spaceBase: this.spaceBase,
+            attrPosition: this.attrPosition,
+            type: this.type,
+            formatting: this.formatting,
+            indent: this.indent,
+            xmlDefaultTag: this.xmlDefaultTag,
+            noContentTags: this.noContentTags.split(',')
+        };
+
+        console.log(options);
+        this.html = new Json2html(this.data, options).toString();
     }
 }

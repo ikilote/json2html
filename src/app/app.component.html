@@ -1,0 +1,98 @@
+<h1>json2html-lib</h1>
+
+<div>
+    <button type="button"
+            (click)="updateExample(1)">Example 1</button>
+    <button type="button"
+            (click)="updateExample(2)">Example 2</button>
+</div>
+
+<main>
+    <fieldset class="json">
+        <legend>json</legend>
+        <textarea (change)="format($event.target.value)">{{data | json}}</textarea>
+    </fieldset>
+
+    <fieldset class="options">
+        <legend>options</legend>
+        <div>
+            <label>
+                <span>formatting</span>
+                <select [value]="formatting"
+                        (change)="formatting = $event.target.value; generated()">
+                    <option value="multiline">multiline (defaut): structure sur plusieur lignes avec indentation
+                        possible</option>
+                    <option value="inline">inline: all on one line without space</option>
+                </select>
+            </label>
+            <label *ngIf="formatting === 'multiline'">
+                <span>indent</span>
+                <input type="checkbox"
+                       [checked]="indent"
+                       (change)="indent = $event.target.checked; generated()">
+            </label>
+            <label *ngIf="indent && formatting === 'multiline'">
+                <span>spaceType</span>
+                <select [value]="spaceType"
+                        (change)="spaceType = $event.target.value; generated()">
+                    <option value="space">space (defaut)</option>
+                    <option value="tab">tab</option>
+                </select>
+            </label>
+            <label *ngIf="indent && formatting === 'multiline'">
+                <span>spaceLength</span>
+                <input [value]="spaceLength"
+                       type="number"
+                       min="0"
+                       (change)="spaceLength = $event.target.value; generated()">
+            </label>
+            <label *ngIf="indent && formatting === 'multiline'">
+                <span>spaceBase</span>
+                <input [value]="spaceBase"
+                       type="number"
+                       min="0"
+                       (change)="spaceBase = $event.target.value; generated()">
+            </label>
+            <label *ngIf="indent && formatting === 'multiline'">
+                <span>attrPosition</span>
+                <select [value]="attrPosition"
+                        (change)="attrPosition = $event.target.value; generated()">
+                    <option value="space">inline: no alignment</option>
+                    <option value="space">space: alignment with higher level</option>
+                    <option value="alignTag">alignTag: alignment with the tag</option>
+                    <option value="alignFirstAttr">alignFirstAttr (default): alignment with the first attribute</option>
+                </select>
+            </label>
+            <label>
+                <span>type</span>
+                <select [value]="type"
+                        (change)="type = $event.target.value; generated()">
+                    <option value="html">html (default)</option>
+                    <option value="xml">xml</option>
+                </select>
+            </label>
+            <label>
+                <span>xmlDefaultTag</span>
+                <input type="text"
+                       [value]="xmlDefaultTag"
+                       (change)="xmlDefaultTag = $event.target.value; generated()">
+            </label>
+            <label>
+                <span>noContentTags</span>
+                <input type="text"
+                       [value]="noContentTags"
+                       (change)="noContentTags = $event.target.value; generated()">
+            </label>
+        </div>
+    </fieldset>
+
+    <fieldset class="rendu">
+        <legend>Rendu</legend>
+        <textarea>{{html}}</textarea>
+    </fieldset>
+</main>
+
+
+<footer>
+    <a href="https://git.ikilote.net/angular/json2html">Source code</a>
+</footer>

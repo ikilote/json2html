@@ -1,0 +1,49 @@
+
+::ng-deep {
+    :root {
+        
+    }
+
+    body {
+        font-family: sans;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+}
+
+
+main {
+    display: grid;
+    grid-template: "a b c" / 2fr 2fr 2fr;
+}
+
+form {
+    flex: 3;
+}
+
+aside {
+    flex: 2;
+    padding: 0 15px
+}
+
+
+textarea {
+    width: 100%;
+    min-height: 350px;
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select {
+    width: 100%;
+}
+
+label {
+    display: block;
+
+    & >  span {
+        display: block;
+        font-weight: 700;
+    }
+}
