@@ -51,5 +51,12 @@
     "ts-node": "~7.0.0",
     "tslint": "~6.1.0",
     "typescript": "~3.9.7"
-  }
+  },
+  "keywords": [
+    "typescript",
+    "html",
+    "json",
+    "xml",
+    "json-to-html"
+  ]
 }
