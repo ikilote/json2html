@@ -49,6 +49,10 @@ export interface Json2htmlOptions {
     indent?: boolean;
     /** list of HTML tags without content */
     noContentTags?: string[];
+    /** remove optional end tags */
+    removeOptionalEndTags?: boolean;
+    /** list of HTML tags with options end tag */
+    optionalEndTags?: string[];
 }
 
 export class Json2html {
@@ -80,6 +84,26 @@ export class Json2html {
             'source',
             'track',
             'wbr'
+        ],
+        removeOptionalEndTags: false,
+        optionalEndTags: [
+            'colgroup',
+            'dd',
+            'dt',
+            'li',
+            'optgroup',
+            'option',
+            'p',
+            'rb',
+            'rt',
+            'rtc',
+            'rp',
+            'td',
+            'th',
+            'thead',
+            'tbody',
+            'tfoot',
+            'tr'
         ]
     };
 
@@ -124,7 +148,14 @@ export class Json2html {
             if (tagcontent && this._hasMultiline()) {
                 tagcontent = `${tagcontent}\n${this._getSpacing(lvl)}`;
             }
-            string += `${tagcontent}</${json.tag}>`;
+            string += tagcontent;
+            if (
+                !this.options.removeOptionalEndTags ||
+                this.options.type === 'xml' ||
+                this.options.removeOptionalEndTags && !this.options.optionalEndTags.includes(json.tag.toLowerCase())
+            ) {
+                string += `</${json.tag}>`;
+            }
         }
         return string;
     }
