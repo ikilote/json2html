@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 
-import { Json2html, Json2htmlRef, Json2htmlOptions } from 'projects/json2html/src/public_api';
-
 import { examples } from './app.json';
+
+import { Json2html, Json2htmlOptions, Json2htmlRef } from 'projects/json2html/src/public_api';
 
 @Component({
     selector: 'app-root',
@@ -39,6 +39,26 @@ export class AppComponent {
         'track',
         'wbr'
     ].toString();
+    removeOptionalEndTags = false;
+    optionalEndTags = [
+        'colgroup',
+        'dd',
+        'dt',
+        'li',
+        'optgroup',
+        'option',
+        'p',
+        'rb',
+        'rt',
+        'rtc',
+        'rp',
+        'td',
+        'th',
+        'thead',
+        'tbody',
+        'tfoot',
+        'tr'
+    ].toString();
 
     data: Json2htmlRef | Json2htmlRef[];
     html: string;
@@ -55,6 +75,7 @@ export class AppComponent {
     format(json: string) {
         try {
             this.data = JSON.parse(json);
+            this.generated();
         } catch (error) {
             console.error(error);
         }
@@ -70,7 +91,9 @@ export class AppComponent {
             formatting: this.formatting,
             indent: this.indent,
             xmlDefaultTag: this.xmlDefaultTag,
-            noContentTags: this.noContentTags.split(',')
+            noContentTags: this.noContentTags.split(','),
+            removeOptionalEndTags: this.removeOptionalEndTags,
+            optionalEndTags: this.optionalEndTags.split(',')
         };
 
         console.log(options);

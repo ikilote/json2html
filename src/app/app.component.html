@@ -57,7 +57,7 @@
                 <span>attrPosition</span>
                 <select [value]="attrPosition"
                         (change)="attrPosition = $event.target.value; generated()">
-                    <option value="space">inline: no alignment</option>
+                    <option value="inline">inline: no alignment</option>
                     <option value="space">space: alignment with higher level</option>
                     <option value="alignTag">alignTag: alignment with the tag</option>
                     <option value="alignFirstAttr">alignFirstAttr (default): alignment with the first attribute</option>
@@ -82,6 +82,18 @@
                 <input type="text"
                        [value]="noContentTags"
                        (change)="noContentTags = $event.target.value; generated()">
+            </label>
+            <label *ngIf="type === 'html'">
+                <span>removeOptionalEndTags</span>
+                <input type="checkbox"
+                       [checked]="removeOptionalEndTags"
+                       (change)="removeOptionalEndTags = $event.target.checked; generated()">
+            </label>
+            <label *ngIf="type === 'html'">
+                <span>optionalEndTags</span>
+                <input type="text"
+                       [value]="optionalEndTags"
+                       (change)="optionalEndTags = $event.target.value; generated()">
             </label>
         </div>
     </fieldset>

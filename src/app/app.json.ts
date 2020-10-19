@@ -48,6 +48,19 @@ export const examples = [
             body: [
                 'test2'
             ]
+        },
+        {
+            tag: 'datalist',
+            attrs: { id: 'id-datalist' },
+            body: [
+                { tag: 'option', attrs: { value: 'ABCD' } },
+                { tag: 'option', attrs: { value: 'EFGH' } },
+                { tag: 'option', attrs: { value: 'IJKL' } },
+                { tag: 'option', attrs: { value: 'MNOP' } },
+                { tag: 'option', attrs: { value: 'QRST' } },
+                { tag: 'option', attrs: { value: 'UVW' } },
+                { tag: 'option', attrs: { value: 'XYZ' } }
+            ]
         }
     ]
 ];
