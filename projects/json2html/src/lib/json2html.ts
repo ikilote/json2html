@@ -149,7 +149,7 @@ export class Json2html {
                         case 'space':
                             attr += string && this.options.indent && this._hasMultiline()
                                 ? `\n${this._getSpacing(lvl + 1)}`
-                                : string += ' ';
+                                : ' ';
                             break;
                         case 'alignTag':
                             attr += string && this.options.indent && this._hasMultiline()
