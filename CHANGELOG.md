@@ -1,5 +1,11 @@
 # Changelog of json2html-lib
 
+## V0.0.6 (2020-10-21)
+
+- Add option `optionalEndTagsFix` 
+- Add options `inline` and `autoclose` on json node
+- fix minor bugs
+
 ## V0.0.5 (2020-10-18)
 
 - fix numeric options
