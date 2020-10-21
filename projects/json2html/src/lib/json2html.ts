@@ -14,7 +14,7 @@ export interface Json2htmlRef {
     body?: Json2htmlBody;
     /** inline : override formatting option for this element and these children */
     inline?: boolean;
-    /** autoclose (XML only) */
+    /** autoclose: ignore body and end tag */
     autoclose?: boolean;
 }
 
@@ -139,19 +139,19 @@ export class Json2html {
      * @param json node data
      * @returns render of node
      */
-    private _generate(lvl: number, json: Json2htmlRef): string {
+    private _generate(lvl: number, json: Json2htmlRef, inline: boolean = false): string {
         const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
-        const xmlAutoClose = !hasContent && this.options.type === 'xml' ? '/' : '';
-        let string = `<${json.tag}${this._generateAttrs(lvl, json)}${xmlAutoClose}>`;
-        if (hasContent) {
-            let tagcontent = this._generateBody(lvl, json);
-            if (tagcontent && this._hasMultiline()) {
+        const xmlAutoClose = (!hasContent || json.autoclose) && this._modeXML() ? '/' : '';
+        let string = `<${json.tag}${this._generateAttrs(lvl, json, inline)}${xmlAutoClose}>`;
+        if (hasContent && !json.autoclose) {
+            let tagcontent = this._generateBody(lvl, json, inline || json.inline);
+            if (tagcontent && this._hasMultiline() && !(inline || json.inline)) {
                 tagcontent = `${tagcontent}\n${this._getSpacing(lvl)}`;
             }
             string += tagcontent;
             if (
                 !this.options.removeOptionalEndTags ||
-                this.options.type === 'xml' ||
+                this._modeXML() ||
                 this.options.removeOptionalEndTags && !this.options.optionalEndTags.includes(json.tag.toLowerCase())
             ) {
                 string += `</${json.tag}>`;
@@ -166,14 +166,14 @@ export class Json2html {
      * @param json node data
      * @returns attributes tag
      */
-    private _generateAttrs(lvl: number, json: Json2htmlRef) {
+    private _generateAttrs(lvl: number, json: Json2htmlRef, inline: boolean) {
         let string = '';
         const attrs = json.attrs;
         if (attrs && Object.keys(attrs).length) {
             for (const id in attrs) {
                 if (attrs[id] !== undefined) {
                     let attr = '';
-                    switch (this.options.attrPosition) {
+                    switch (!inline ? this.options.attrPosition : 'inline') {
                         case 'inline':
                             attr += ' ';
                             break;
@@ -207,14 +207,14 @@ export class Json2html {
      * @param json node data
      * @returns render of body
      */
-    private _generateBody(lvl: number, json: Json2htmlRef) {
+    private _generateBody(lvl: number, json: Json2htmlRef, inline: boolean) {
         let string = '';
         if (json.body) {
             if (!Array.isArray(json.body)) {
-                string += this._generateBodyElement(lvl, json.body, true);
+                string += this._generateBodyElement(lvl, json.body, true, inline);
             } else {
                 json.body.forEach(element => {
-                    string += this._generateBodyElement(lvl, element, false);
+                    string += this._generateBodyElement(lvl, element, false, inline);
                 });
             }
         }
@@ -228,14 +228,19 @@ export class Json2html {
      * @param onlyOne body this an unique node
      * @returns render of body
      */
-    private _generateBodyElement(lvl: number, element: Json2htmlRef | string, onlyOne: boolean): string {
+    private _generateBodyElement(
+        lvl: number,
+        element: Json2htmlRef | string,
+        onlyOne: boolean,
+        inline: boolean = false
+    ): string {
         let string = '';
-        if (this._hasMultiline()) {
+        if (this._hasMultiline() && !inline) {
             string += `\n${this._getSpacing(lvl + 1)}`;
         }
 
         // in XML mode, for generate a valid XML structure
-        if (!onlyOne && this.options.type === 'xml' && typeof element === 'string') {
+        if (!onlyOne && this._modeXML() && typeof element === 'string') {
             element = {
                 tag: this.options.xmlDefaultTag,
                 body: element
@@ -244,7 +249,7 @@ export class Json2html {
 
         string += typeof element === 'string'
             ? element
-            : this._generate(lvl + 1, element);
+            : this._generate(lvl + 1, element, inline);
         return string;
     }
 
@@ -253,6 +258,13 @@ export class Json2html {
      */
     private _hasMultiline(): boolean {
         return this.options.formatting === 'multiline';
+    }
+
+    /**
+     * if multiline rendering
+     */
+    private _modeXML(): boolean {
+        return this.options.type === 'xml';
     }
 
     /**

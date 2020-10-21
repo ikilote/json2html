@@ -1,5 +1,4 @@
 export const examples = [
-    ,
     {
         tag: 'div',
         attrs: { id: 'test1', class: 'testclasse' },
@@ -40,7 +39,8 @@ export const examples = [
                         'test2'
                     ]
                 }
-            ]
+            ],
+            inline: false
         },
         {
             tag: 'span',
@@ -48,6 +48,14 @@ export const examples = [
             body: [
                 'test2'
             ]
+        },
+        {
+            tag: 'test-autoclose',
+            attrs: { id: 'attr-2', class: 'bar' },
+            body: [
+                'test2'
+            ],
+            autoclose: true
         },
         {
             tag: 'datalist',
@@ -60,7 +68,8 @@ export const examples = [
                 { tag: 'option', attrs: { value: 'QRST' } },
                 { tag: 'option', attrs: { value: 'UVW' } },
                 { tag: 'option', attrs: { value: 'XYZ' } }
-            ]
+            ],
+            inline: true
         }
     ]
 ];
