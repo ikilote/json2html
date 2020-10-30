@@ -53,8 +53,7 @@ console.log(new Json2html({
 ## Publishing the library
 
 ```
-ng build json2html --prod
-cp *.md dist/json2html
+npm run build:lib
 cd dist/json2html
 npm publish
 ```
@@ -62,7 +61,7 @@ npm publish
 ## Publishing the demo
 
 ```
-ng build --prod
+npm run build:demo
 ```
 
 ## License

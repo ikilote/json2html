@@ -1,5 +1,5 @@
 {
-  "name": "@zaide/json2html-demo",
+  "name": "json2html-demo",
   "version": "0.0.3",
   "license": "MIT",
   "repository": {
@@ -12,7 +12,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build:lib": "ng build json2html --prod && cp *.md dist/json2html",
+    "build:demo": "ng build --prod"
   },
   "private": true,
   "dependencies": {
