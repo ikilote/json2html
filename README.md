@@ -10,10 +10,12 @@ Generation of an HTML plain text from a Json structure with several setting opti
 npm i json2html-lib --save
 ```
 
+- 0.0.6 : for View Engine
+- 0.1.0+ : for Ivy
 ## Requirements
 
 Only for demo:
-- Angular 10.0.0 and more
+- Angular 13.2.0 and more
 
 ## Demo
 

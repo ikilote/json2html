@@ -1,5 +1,9 @@
 # Changelog of json2html-lib
 
+## V0.1.0 (2022-02-10)
+
+- With Ivy partial compilation mode
+
 ## V0.0.6 (2020-10-21)
 
 - Add option `optionalEndTagsFix` 
