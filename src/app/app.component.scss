@@ -1,16 +1,3 @@
-::ng-deep {
-    :root {
-    }
-
-    body {
-        font-family: sans;
-    }
-
-    * {
-        box-sizing: border-box;
-    }
-}
-
 main {
     display: grid;
     grid-template: 'a b c' / 2fr 2fr 2fr;

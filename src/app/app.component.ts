@@ -19,10 +19,9 @@ export class AppComponent {
     spaceType: 'space' | 'tab' = 'space';
     spaceLength = 4;
     spaceBase = 0;
-    // maxLenght= 0;
     attrPosition: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr' = 'alignFirstAttr';
     wrapAttrNumber = 1;
-    maxLength = 0;
+    maxLength = 80;
     type: 'html' | 'xml' = 'html';
     formatting: 'inline' | 'multiline' = 'multiline';
     indent = true;

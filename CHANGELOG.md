@@ -4,6 +4,7 @@
 
 -   Add option `wrapAttrNumber`
 -   Add options `prettier` on `attrPosition`
+-   Add options `maxLength` for text and `attrPosition` (`inline *`)
 
 ## V0.1.0 (2022-02-10)
 

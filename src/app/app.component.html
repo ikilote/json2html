@@ -56,6 +56,11 @@
                 <span>attrPosition</span>
                 <select [value]="attrPosition" (change)="attrPosition = $event.target.value; generated()">
                     <option value="inline">inline: no alignment</option>
+                    <option value="inline space">inline space: wrap with alignment with higher level</option>
+                    <option value="inline alignTag">inline alignTag: wrap with alignment with the tag</option>
+                    <option value="inline alignFirstAttr">
+                        inline alignFirstAttr: wrap alignment with the first attribute
+                    </option>
                     <option value="space">space: alignment with higher level</option>
                     <option value="alignTag">alignTag: alignment with the tag</option>
                     <option value="alignFirstAttr">alignFirstAttr (default): alignment with the first attribute</option>

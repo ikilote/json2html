@@ -13,6 +13,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "publish": "npm run publish dist/json2html",
     "build:lib": "ng build json2html --configuration production && cp *.md dist/json2html",
     "build:demo": "ng build --configuration production"
   },

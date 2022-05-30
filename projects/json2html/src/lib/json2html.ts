@@ -35,12 +35,23 @@ export interface Json2htmlOptions {
     /**
      * attribute alignment:
      * * `inline`: no alignment
+     *   * `inline space`: wrap with alignment with higher level
+     *   * `inline alignTag`: wrap with alignment with the tag
+     *   * `inline alignFirstAttr`: wrap alignment with the first attribute
      * * `space`: alignment with higher level
      * * `alignTag`: alignment with the tag
      * * `alignFirstAttr`: alignment with the first attribute
      * * `prettier`: like Prettier formatter
      */
-    attrPosition?: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr' | 'prettier';
+    attrPosition?:
+        | 'inline'
+        | 'inline space'
+        | 'inline alignTag'
+        | 'inline alignFirstAttr'
+        | 'space'
+        | 'alignTag'
+        | 'alignFirstAttr'
+        | 'prettier';
     /** attr number wen  0 == 'inline' */
     wrapAttrNumber?: number;
     /** Format of the targeted structure */
@@ -136,6 +147,7 @@ export class Json2html {
      * generation in string for a node (tag with attributes and content)
      * @param lvl node level
      * @param json node data
+     * @param inline force inline
      * @returns render of node
      */
     private _generate(lvl: number, json: Json2htmlRef, inline: boolean = false): string {
@@ -163,6 +175,7 @@ export class Json2html {
      * attributes list generation
      * @param lvl level node
      * @param json node data
+     * @param inline force inline
      * @returns attributes tag
      */
     private _generateAttrs(lvl: number, json: Json2htmlRef, inline: boolean) {
@@ -172,25 +185,46 @@ export class Json2html {
             const length = Object.values(json.attrs).filter(i => i !== undefined).length;
             const typeAlign =
                 (this.options.wrapAttrNumber ?? 1) < length && !inline ? this.options.attrPosition : 'inline';
-            let attrLine = `${this._getSpacing(lvl, 1)}${json.tag} `;
+            let attrLine = `${this._getSpacing(lvl, 1)}${json.tag}`;
+            let count = 1;
 
-            for (const id in attrs) {
-                if (attrs[id] !== undefined) {
-                    const attrCurrent = `${id}${attrs[id] !== null || attrs[id] ? `="${attrs[id]}"` : ''}`;
+            Object.keys(attrs).forEach((id, index, array) => {
+                const value = attrs[id];
+                if (value !== undefined) {
+                    const attrCurrent = `${id}${value !== null || value ? `="${value}"` : ''}`;
 
                     let attr = '';
                     let attrAdd = '';
+                    const [align, type] = typeAlign.split(' ');
 
-                    switch (typeAlign) {
+                    switch (align) {
                         case 'inline':
                             if (
                                 !this.options.maxLength ||
-                                (attrLine + ' ' + attrCurrent).length <= this.options.maxLength
+                                (
+                                    attrLine.replace('\n', '') +
+                                    (count > 1 ? ' ' : '') +
+                                    attrCurrent +
+                                    (index === array.length - 1 ? '>' : '')
+                                ).length < this.options.maxLength ||
+                                type === undefined
                             ) {
                                 attrAdd = ' ';
+                                count++;
                             } else {
-                                attrAdd = `\n${this._getSpacing(lvl + 1)}`;
-                                attrLine = this._getSpacing(lvl);
+                                switch (type) {
+                                    case 'space':
+                                        attrAdd = `\n${this._getSpacing(lvl + 1)}`;
+                                        break;
+                                    case 'alignTag':
+                                        attrAdd = `\n${this._getSpacing(lvl, 1)}`;
+                                        break;
+                                    case 'alignFirstAttr':
+                                        attrAdd = `\n${this._getSpacing(lvl, json.tag.length + 2)}`;
+                                        break;
+                                }
+                                attrLine = '';
+                                count = 1;
                             }
                             break;
                         case 'space':
@@ -220,7 +254,7 @@ export class Json2html {
                     attrLine += attr;
                     string += attr;
                 }
-            }
+            });
 
             switch (typeAlign) {
                 case 'prettier':
@@ -235,6 +269,7 @@ export class Json2html {
      * tag body generation
      * @param lvl level node
      * @param json node data
+     * @param inline force inline
      * @returns render of body
      */
     private _generateBody(lvl: number, json: Json2htmlRef, inline: boolean) {
@@ -256,6 +291,7 @@ export class Json2html {
      * @param lvl level node
      * @param element node data or string
      * @param onlyOne body this an unique node
+     * @param inline force inline
      * @returns render of body
      */
     private _generateBodyElement(
@@ -277,8 +313,44 @@ export class Json2html {
             };
         }
 
-        string += typeof element === 'string' ? element : this._generate(lvl + 1, element, inline);
+        string +=
+            typeof element === 'string'
+                ? this._formatText(lvl + 1, element, inline)
+                : this._generate(lvl + 1, element, inline);
         return string;
+    }
+
+    /**
+     * formated string
+     * @param lvl level node
+     * @param string text
+     * @param inline inline
+     * @returns render of string
+     */
+    private _formatText(lvl: number, string: string, inline: boolean = false): string {
+        let formatedText = '';
+        const space = this._getSpacing(lvl);
+        if (!inline && this.options.maxLength) {
+            const list = string.split('\n');
+            for (const line of list) {
+                if ((space + line).length > this.options.maxLength) {
+                    const frags = line.split(' ');
+                    let lineBuild = '';
+                    for (const frag of frags) {
+                        if ((space + lineBuild + (lineBuild ? ' ' : '') + frag).length < this.options.maxLength) {
+                            lineBuild += (lineBuild ? ' ' : '') + frag;
+                        } else {
+                            formatedText += (formatedText ? '\n' + space : '') + lineBuild;
+                            lineBuild = frag;
+                        }
+                    }
+                    formatedText += (formatedText ? '\n' + space : '') + lineBuild;
+                } else {
+                    formatedText += (formatedText ? '\n' + space : '') + line;
+                }
+            }
+        }
+        return formatedText || string;
     }
 
     /**
