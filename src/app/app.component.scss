@@ -14,7 +14,8 @@ aside {
 
 textarea {
     width: 100%;
-    min-height: 350px;
+    min-height: 600px;
+    resize: vertical;
 }
 
 input:not([type='checkbox']):not([type='radio']),
