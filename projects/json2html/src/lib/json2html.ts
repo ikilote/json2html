@@ -133,11 +133,16 @@ export class Json2html {
      */
     toString() {
         let html = '';
+        const inline = this.options.formatting === 'inline';
         if (!Array.isArray(this.json)) {
-            html = `${this._getSpacing(0)}${this._generate(0, this.json)}`;
+            html = `${this._getSpacing(0)}${this._generate(0, this.json, inline)}`;
         } else {
             this.json.forEach((element, index) => {
-                html += `${index > 0 ? '\n' : ''}${this._getSpacing(0)}${this._generate(0, element)}`;
+                html += `${index > 0 && !inline ? '\n' : ''}${this._getSpacing(0)}${this._generate(
+                    0,
+                    element,
+                    inline,
+                )}`;
             });
         }
         return html;
@@ -153,7 +158,7 @@ export class Json2html {
     private _generate(lvl: number, json: Json2htmlRef, inline: boolean = false): string {
         const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
         const xmlAutoClose = (!hasContent || json.autoclose) && this._modeXML() ? '/' : '';
-        let string = `<${json.tag}${this._generateAttrs(lvl, json, inline)}${xmlAutoClose}>`;
+        let string = `<${json.tag}${this._generateAttrs(lvl, json, inline || json.inline)}${xmlAutoClose}>`;
         if (hasContent && !json.autoclose) {
             let tagcontent = this._generateBody(lvl, json, inline || json.inline);
             if (tagcontent && this._hasMultiline() && !(inline || json.inline)) {

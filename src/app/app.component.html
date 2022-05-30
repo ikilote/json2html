@@ -67,15 +67,16 @@
                     <option value="prettier">prettier: like Prettier formatter</option>
                 </select>
             </label>
-            <label>
+            <label *ngIf="indent && formatting === 'multiline'">
                 <span>wrapAttrNumber</span>
                 <input
                     [value]="wrapAttrNumber"
                     type="number"
                     min="0"
                     (change)="wrapAttrNumber = $event.target.value; generated()"
-                /> </label
-            ><label>
+                />
+            </label>
+            <label *ngIf="indent && formatting === 'multiline'">
                 <span>maxLength (0 = no wrap)</span>
                 <input
                     [value]="maxLength"
