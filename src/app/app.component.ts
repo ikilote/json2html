@@ -22,6 +22,7 @@ export class AppComponent {
     // maxLenght= 0;
     attrPosition: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr' = 'alignFirstAttr';
     wrapAttrNumber = 1;
+    maxLength = 0;
     type: 'html' | 'xml' = 'html';
     formatting: 'inline' | 'multiline' = 'multiline';
     indent = true;
@@ -97,6 +98,7 @@ export class AppComponent {
             indent: this.indent,
             xmlDefaultTag: this.xmlDefaultTag,
             wrapAttrNumber: this.wrapAttrNumber,
+            maxLength: this.maxLength,
             noContentTags: this.noContentTags.split(','),
             removeOptionalEndTags: this.removeOptionalEndTags,
             optionalEndTags: this.optionalEndTags.split(','),

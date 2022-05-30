@@ -69,6 +69,14 @@
                     type="number"
                     min="0"
                     (change)="wrapAttrNumber = $event.target.value; generated()"
+                /> </label
+            ><label>
+                <span>maxLength (0 = no wrap)</span>
+                <input
+                    [value]="maxLength"
+                    type="number"
+                    min="0"
+                    (change)="maxLength = $event.target.value; generated()"
                 />
             </label>
             <label>

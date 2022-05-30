@@ -31,13 +31,14 @@ export interface Json2htmlOptions {
     /** size of the indentation before each line */
     spaceBase?: number;
     /** maximum number of characters for a line */
-    // maxLenght?: number;
+    maxLength?: number;
     /**
      * attribute alignment:
      * * `inline`: no alignment
      * * `space`: alignment with higher level
      * * `alignTag`: alignment with the tag
      * * `alignFirstAttr`: alignment with the first attribute
+     * * `prettier`: like Prettier formatter
      */
     attrPosition?: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr' | 'prettier';
     /** attr number wen  0 == 'inline' */
@@ -61,8 +62,9 @@ export class Json2html {
         spaceType: 'space',
         spaceLength: 4,
         spaceBase: 0,
-        // maxLenght: 0,
+        maxLength: 0,
         attrPosition: 'alignFirstAttr',
+        wrapAttrNumber: 1,
         type: 'html',
         formatting: 'multiline',
         indent: true,
@@ -170,38 +172,52 @@ export class Json2html {
             const length = Object.values(json.attrs).filter(i => i !== undefined).length;
             const typeAlign =
                 (this.options.wrapAttrNumber ?? 1) < length && !inline ? this.options.attrPosition : 'inline';
+            let attrLine = `${this._getSpacing(lvl, 1)}${json.tag} `;
 
             for (const id in attrs) {
                 if (attrs[id] !== undefined) {
+                    const attrCurrent = `${id}${attrs[id] !== null || attrs[id] ? `="${attrs[id]}"` : ''}`;
+
                     let attr = '';
+                    let attrAdd = '';
+
                     switch (typeAlign) {
                         case 'inline':
-                            attr += ' ';
+                            if (
+                                !this.options.maxLength ||
+                                (attrLine + ' ' + attrCurrent).length <= this.options.maxLength
+                            ) {
+                                attrAdd = ' ';
+                            } else {
+                                attrAdd = `\n${this._getSpacing(lvl + 1)}`;
+                                attrLine = this._getSpacing(lvl);
+                            }
                             break;
                         case 'space':
-                            attr +=
+                            attrAdd =
                                 string && this.options.indent && this._hasMultiline()
                                     ? `\n${this._getSpacing(lvl + 1)}`
                                     : ' ';
                             break;
                         case 'alignTag':
-                            attr +=
+                            attrAdd =
                                 string && this.options.indent && this._hasMultiline()
                                     ? `\n${this._getSpacing(lvl, 1)}`
                                     : ' ';
                             break;
                         case 'alignFirstAttr':
-                            attr +=
+                            attrAdd =
                                 string && this.options.indent && this._hasMultiline()
                                     ? `\n${this._getSpacing(lvl, json.tag.length + 2)}`
                                     : ' ';
                             break;
                         case 'prettier':
-                            attr +=
+                            attrAdd =
                                 this.options.indent && this._hasMultiline() ? `\n${this._getSpacing(lvl + 1)}` : ' ';
                             break;
                     }
-                    attr += `${id}${attrs[id] !== null || attrs[id] ? `="${attrs[id]}"` : ''}`;
+                    attr = attrAdd + attrCurrent;
+                    attrLine += attr;
                     string += attr;
                 }
             }
