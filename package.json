@@ -1,6 +1,6 @@
 {
   "name": "json2html-demo",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "publish": "npm run publish dist/json2html",
+    "publish:lib": "npm publish dist/json2html",
     "build:lib": "ng build json2html --configuration production && cp *.md dist/json2html",
     "build:demo": "ng build --configuration production"
   },

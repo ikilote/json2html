@@ -63,8 +63,7 @@ console.log(
 
 ```
 npm run build:lib
-cd dist/json2html
-npm publish
+npm run publish:lib
 ```
 
 ## Publishing the demo
