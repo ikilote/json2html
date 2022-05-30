@@ -10,12 +10,14 @@ Generation of an HTML plain text from a Json structure with several setting opti
 npm i json2html-lib --save
 ```
 
-- 0.0.6 : for View Engine
-- 0.1.0+ : for Ivy
+-   0.0.6 : for View Engine
+-   0.1.0+ : for Ivy
+
 ## Requirements
 
 Only for demo:
-- Angular 13.2.0 and more
+
+-   Angular 13.2.0 and more
 
 ## Demo
 
@@ -23,23 +25,28 @@ Only for demo:
 
 ## Usage
 
-### Examples 
+### Examples
 
 ```typescript
 import { Json2html } from 'json2html-lib';
 
-console.log(new Json2html({
-      tag: 'div',
-      attrs: { id: 'test1', class: 'testclasse' },
-      body: [
-        'test',
+console.log(
+    new Json2html(
         {
-          tag: 'div',
-          attrs: { id: 'test2', class: 'foobar' },
-          body: 'test'
-        }
-      ]
-    }, { formatting: 'multiline' }).toString());
+            tag: 'div',
+            attrs: { id: 'test1', class: 'testclasse' },
+            body: [
+                'test',
+                {
+                    tag: 'div',
+                    attrs: { id: 'test2', class: 'foobar' },
+                    body: 'test',
+                },
+            ],
+        },
+        { formatting: 'multiline' },
+    ).toString(),
+);
 /*
 <div id="test1"
      class="testclasse">

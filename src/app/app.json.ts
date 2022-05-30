@@ -7,9 +7,9 @@ export const examples = [
             {
                 tag: 'div',
                 attrs: { id: 'test2', class: 'foobar' },
-                body: 'test'
-            }
-        ]
+                body: 'test',
+            },
+        ],
     },
     [
         {
@@ -25,37 +25,31 @@ export const examples = [
                         {
                             tag: 'div',
                             attrs: { id: 'test-subdiv', class: 'foobar' },
-                            body: 'test3'
-                        }
-                    ]
+                            body: 'test3',
+                        },
+                    ],
                 },
                 {
-                    tag: 'hr'
+                    tag: 'hr',
                 },
                 {
                     tag: 'span',
                     attrs: { id: 'test-span', class: 'bar' },
-                    body: [
-                        'test2'
-                    ]
-                }
+                    body: ['test2'],
+                },
             ],
-            inline: false
+            inline: false,
         },
         {
             tag: 'span',
             attrs: { id: 'attr-2', class: 'bar' },
-            body: [
-                'test2'
-            ]
+            body: ['test2'],
         },
         {
             tag: 'test-autoclose',
             attrs: { id: 'attr-2', class: 'bar' },
-            body: [
-                'test2'
-            ],
-            autoclose: true
+            body: ['test2'],
+            autoclose: true,
         },
         {
             tag: 'datalist',
@@ -67,9 +61,9 @@ export const examples = [
                 { tag: 'option', attrs: { value: 'MNOP' } },
                 { tag: 'option', attrs: { value: 'QRST' } },
                 { tag: 'option', attrs: { value: 'UVW' } },
-                { tag: 'option', attrs: { value: 'XYZ' } }
+                { tag: 'option', attrs: { value: 'XYZ' } },
             ],
-            inline: true
-        }
-    ]
+            inline: true,
+        },
+    ],
 ];

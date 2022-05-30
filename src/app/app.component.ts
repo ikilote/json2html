@@ -1,22 +1,27 @@
 import { Component } from '@angular/core';
 
+import {
+  Json2html,
+  Json2htmlOptions,
+  Json2htmlRef,
+} from 'projects/json2html/src/public_api';
+
 import { examples } from './app.json';
 
-import { Json2html, Json2htmlOptions, Json2htmlRef } from 'projects/json2html/src/public_api';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-
     // options
     spaceType: 'space' | 'tab' = 'space';
     spaceLength = 4;
     spaceBase = 0;
     // maxLenght= 0;
     attrPosition: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr' = 'alignFirstAttr';
+    wrapAttrNumber = 1;
     type: 'html' | 'xml' = 'html';
     formatting: 'inline' | 'multiline' = 'multiline';
     indent = true;
@@ -37,7 +42,7 @@ export class AppComponent {
         'param',
         'source',
         'track',
-        'wbr'
+        'wbr',
     ].toString();
     removeOptionalEndTags = false;
     optionalEndTags = [
@@ -57,7 +62,7 @@ export class AppComponent {
         'thead',
         'tbody',
         'tfoot',
-        'tr'
+        'tr',
     ].toString();
 
     data: Json2htmlRef | Json2htmlRef[];
@@ -91,9 +96,10 @@ export class AppComponent {
             formatting: this.formatting,
             indent: this.indent,
             xmlDefaultTag: this.xmlDefaultTag,
+            wrapAttrNumber: this.wrapAttrNumber,
             noContentTags: this.noContentTags.split(','),
             removeOptionalEndTags: this.removeOptionalEndTags,
-            optionalEndTags: this.optionalEndTags.split(',')
+            optionalEndTags: this.optionalEndTags.split(','),
         };
 
         console.log(options);

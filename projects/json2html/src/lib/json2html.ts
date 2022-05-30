@@ -1,4 +1,3 @@
-
 export interface Json2htmlAttr {
     [key: string]: string | number | null;
 }
@@ -40,7 +39,9 @@ export interface Json2htmlOptions {
      * * `alignTag`: alignment with the tag
      * * `alignFirstAttr`: alignment with the first attribute
      */
-    attrPosition?: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr';
+    attrPosition?: 'inline' | 'space' | 'alignTag' | 'alignFirstAttr' | 'prettier';
+    /** attr number wen  0 == 'inline' */
+    wrapAttrNumber?: number;
     /** Format of the targeted structure */
     type?: 'html' | 'xml';
     /** in XML mode, auto generated tag if the only text alongside other tags */
@@ -56,7 +57,6 @@ export interface Json2htmlOptions {
 }
 
 export class Json2html {
-
     readonly options: Json2htmlOptions = {
         spaceType: 'space',
         spaceLength: 4,
@@ -83,7 +83,7 @@ export class Json2html {
             'param',
             'source',
             'track',
-            'wbr'
+            'wbr',
         ],
         removeOptionalEndTags: false,
         optionalEndTags: [
@@ -103,18 +103,15 @@ export class Json2html {
             'thead',
             'tbody',
             'tfoot',
-            'tr'
-        ]
+            'tr',
+        ],
     };
 
     /**
      * @param json one ou list of node data
      * @param option formating options
      */
-    constructor(
-        public json: Json2htmlRef | Json2htmlRef[],
-        option: Json2htmlOptions = {}
-    ) {
+    constructor(public json: Json2htmlRef | Json2htmlRef[], option: Json2htmlOptions = {}) {
         Object.assign(this.options, option);
     }
 
@@ -152,7 +149,7 @@ export class Json2html {
             if (
                 !this.options.removeOptionalEndTags ||
                 this._modeXML() ||
-                this.options.removeOptionalEndTags && !this.options.optionalEndTags.includes(json.tag.toLowerCase())
+                (this.options.removeOptionalEndTags && !this.options.optionalEndTags.includes(json.tag.toLowerCase()))
             ) {
                 string += `</${json.tag}>`;
             }
@@ -170,32 +167,49 @@ export class Json2html {
         let string = '';
         const attrs = json.attrs;
         if (attrs && Object.keys(attrs).length) {
+            const length = Object.values(json.attrs).filter(i => i !== undefined).length;
+            const typeAlign =
+                (this.options.wrapAttrNumber ?? 1) < length && !inline ? this.options.attrPosition : 'inline';
+
             for (const id in attrs) {
                 if (attrs[id] !== undefined) {
                     let attr = '';
-                    switch (!inline ? this.options.attrPosition : 'inline') {
+                    switch (typeAlign) {
                         case 'inline':
                             attr += ' ';
                             break;
                         case 'space':
-                            attr += string && this.options.indent && this._hasMultiline()
-                                ? `\n${this._getSpacing(lvl + 1)}`
-                                : ' ';
+                            attr +=
+                                string && this.options.indent && this._hasMultiline()
+                                    ? `\n${this._getSpacing(lvl + 1)}`
+                                    : ' ';
                             break;
                         case 'alignTag':
-                            attr += string && this.options.indent && this._hasMultiline()
-                                ? `\n${this._getSpacing(lvl, 1)}`
-                                : ' ';
+                            attr +=
+                                string && this.options.indent && this._hasMultiline()
+                                    ? `\n${this._getSpacing(lvl, 1)}`
+                                    : ' ';
                             break;
                         case 'alignFirstAttr':
-                            attr += string && this.options.indent && this._hasMultiline()
-                                ? `\n${this._getSpacing(lvl, json.tag.length + 2)}`
-                                : ' ';
+                            attr +=
+                                string && this.options.indent && this._hasMultiline()
+                                    ? `\n${this._getSpacing(lvl, json.tag.length + 2)}`
+                                    : ' ';
+                            break;
+                        case 'prettier':
+                            attr +=
+                                this.options.indent && this._hasMultiline() ? `\n${this._getSpacing(lvl + 1)}` : ' ';
                             break;
                     }
                     attr += `${id}${attrs[id] !== null || attrs[id] ? `="${attrs[id]}"` : ''}`;
                     string += attr;
                 }
+            }
+
+            switch (typeAlign) {
+                case 'prettier':
+                    string += this.options.indent && this._hasMultiline() ? `\n${this._getSpacing(lvl)}` : ' ';
+                    break;
             }
         }
         return string;
@@ -232,7 +246,7 @@ export class Json2html {
         lvl: number,
         element: Json2htmlRef | string,
         onlyOne: boolean,
-        inline: boolean = false
+        inline: boolean = false,
     ): string {
         let string = '';
         if (this._hasMultiline() && !inline) {
@@ -243,13 +257,11 @@ export class Json2html {
         if (!onlyOne && this._modeXML() && typeof element === 'string') {
             element = {
                 tag: this.options.xmlDefaultTag,
-                body: element
+                body: element,
             };
         }
 
-        string += typeof element === 'string'
-            ? element
-            : this._generate(lvl + 1, element, inline);
+        string += typeof element === 'string' ? element : this._generate(lvl + 1, element, inline);
         return string;
     }
 
@@ -275,9 +287,9 @@ export class Json2html {
      */
     private _getSpacing(lvl: number, addition: number = 0): string {
         return this.options.indent
-            ? (this.options.spaceType === 'space' ? ' ' : '\t')
-                .repeat((lvl + +this.options.spaceBase) * +this.options.spaceLength) + ' '.repeat(addition)
+            ? (this.options.spaceType === 'space' ? ' ' : '\t').repeat(
+                  (lvl + +this.options.spaceBase) * +this.options.spaceLength,
+              ) + ' '.repeat(addition)
             : '';
     }
-
 }

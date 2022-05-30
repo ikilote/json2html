@@ -1,7 +1,5 @@
-
 ::ng-deep {
     :root {
-        
     }
 
     body {
@@ -13,10 +11,9 @@
     }
 }
 
-
 main {
     display: grid;
-    grid-template: "a b c" / 2fr 2fr 2fr;
+    grid-template: 'a b c' / 2fr 2fr 2fr;
 }
 
 form {
@@ -25,16 +22,15 @@ form {
 
 aside {
     flex: 2;
-    padding: 0 15px
+    padding: 0 15px;
 }
-
 
 textarea {
     width: 100%;
     min-height: 350px;
 }
 
-input:not([type="checkbox"]):not([type="radio"]),
+input:not([type='checkbox']):not([type='radio']),
 select {
     width: 100%;
 }
@@ -42,7 +38,7 @@ select {
 label {
     display: block;
 
-    & >  span {
+    & > span {
         display: block;
         font-weight: 700;
     }
