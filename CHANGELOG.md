@@ -2,18 +2,20 @@
 
 ## V0.2.0 (2022-05-30)
 
--   Add option `wrapAttrNumber`
--   Add options `prettier` on `attrPosition`
--   Add options `maxLength` for text and `attrPosition` (`inline *`)
+-   add option `wrapAttrNumber`
+-   add options `prettier` on `attrPosition`
+-   add options `maxLength` for text and `attrPosition` (`inline *`)
+-   fix `inline` render
+-   update demo
 
 ## V0.1.0 (2022-02-10)
 
--   With Ivy partial compilation mode
+-   with Ivy partial compilation mode
 
 ## V0.0.6 (2020-10-21)
 
--   Add option `optionalEndTagsFix`
--   Add options `inline` and `autoclose` on json node
+-   add option `optionalEndTagsFix`
+-   add options `inline` and `autoclose` on json node
 -   fix minor bugs
 
 ## V0.0.5 (2020-10-18)
@@ -33,7 +35,7 @@
 
 ## V0.0.2 (2020-10-14)
 
--   Fix attributs render
+-   fix attributs render
 
 ## V0.0.1 (2020-10-14)
 

@@ -52,7 +52,7 @@
                     (change)="spaceBase = $event.target.value; generated()"
                 />
             </label>
-            <label *ngIf="indent && formatting === 'multiline'">
+            <label *ngIf="formatting === 'multiline'">
                 <span>attrPosition</span>
                 <select [value]="attrPosition" (change)="attrPosition = $event.target.value; generated()">
                     <option value="inline">inline: no alignment</option>
@@ -61,10 +61,12 @@
                     <option value="inline alignFirstAttr">
                         inline alignFirstAttr: wrap alignment with the first attribute
                     </option>
-                    <option value="space">space: alignment with higher level</option>
-                    <option value="alignTag">alignTag: alignment with the tag</option>
-                    <option value="alignFirstAttr">alignFirstAttr (default): alignment with the first attribute</option>
-                    <option value="prettier">prettier: like Prettier formatter</option>
+                    <option *ngIf="indent" value="space">space: alignment with higher level</option>
+                    <option *ngIf="indent" value="alignTag">alignTag: alignment with the tag</option>
+                    <option *ngIf="indent" value="alignFirstAttr">
+                        alignFirstAttr (default): alignment with the first attribute
+                    </option>
+                    <option *ngIf="indent" value="prettier">prettier: like Prettier formatter</option>
                 </select>
             </label>
             <label *ngIf="indent && formatting === 'multiline'">
@@ -76,7 +78,7 @@
                     (change)="wrapAttrNumber = $event.target.value; generated()"
                 />
             </label>
-            <label *ngIf="indent && formatting === 'multiline'">
+            <label *ngIf="formatting === 'multiline'">
                 <span>maxLength (0 = no wrap)</span>
                 <input
                     [value]="maxLength"

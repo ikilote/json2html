@@ -338,9 +338,9 @@ export class Json2html {
         if (!inline && this.options.maxLength) {
             const list = string.split('\n');
             for (const line of list) {
+                let lineBuild = '';
                 if ((space + line).length > this.options.maxLength) {
                     const frags = line.split(' ');
-                    let lineBuild = '';
                     for (const frag of frags) {
                         if ((space + lineBuild + (lineBuild ? ' ' : '') + frag).length < this.options.maxLength) {
                             lineBuild += (lineBuild ? ' ' : '') + frag;
@@ -349,10 +349,8 @@ export class Json2html {
                             lineBuild = frag;
                         }
                     }
-                    formatedText += (formatedText ? '\n' + space : '') + lineBuild;
-                } else {
-                    formatedText += (formatedText ? '\n' + space : '') + line;
                 }
+                formatedText += (formatedText ? '\n' + space : '') + (lineBuild || line);
             }
         }
         return formatedText || string;
