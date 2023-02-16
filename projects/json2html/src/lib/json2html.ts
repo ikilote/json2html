@@ -196,7 +196,9 @@ export class Json2html {
             Object.keys(attrs).forEach((id, index, array) => {
                 const value = attrs[id];
                 if (value !== undefined) {
-                    const attrCurrent = `${id}${value !== null || value ? `="${value}"` : ''}`;
+                    const attrCurrent = `${id}${
+                        value !== null || value ? `="${String(value).replace(/"/g, '&quote;')}"` : ''
+                    }`;
 
                     let attr = '';
                     let attrAdd = '';
@@ -207,7 +209,7 @@ export class Json2html {
                             if (
                                 !this.options.maxLength ||
                                 (
-                                    attrLine.replace('\n', '') +
+                                    attrLine.replace(/\n/g, '') +
                                     (count > 1 ? ' ' : '') +
                                     attrCurrent +
                                     (index === array.length - 1 ? '>' : '')
