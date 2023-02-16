@@ -1,13 +1,8 @@
 import { Component } from '@angular/core';
 
-import {
-  Json2html,
-  Json2htmlOptions,
-  Json2htmlRef,
-} from 'projects/json2html/src/public_api';
+import { Json2html, Json2htmlOptions, Json2htmlRef } from 'projects/json2html/src/public_api';
 
 import { examples } from './app.json';
-
 
 @Component({
     selector: 'app-root',
@@ -68,6 +63,7 @@ export class AppComponent {
     data: Json2htmlRef | Json2htmlRef[];
     html: string;
 
+    mode: 'json' | 'js' = 'json';
     constructor() {
         this.updateExample(1);
     }
@@ -77,9 +73,17 @@ export class AppComponent {
         this.generated();
     }
 
-    format(json: string) {
+    modeEdit(mode: 'json' | 'js') {
+        this.mode = mode;
+    }
+
+    format(data: string) {
         try {
-            this.data = JSON.parse(json);
+            if (this.mode === 'json') {
+                this.data = JSON.parse(data);
+            } else {
+                this.data = eval(data.replace('\n', ''));
+            }
             this.generated();
         } catch (error) {
             console.error(error);

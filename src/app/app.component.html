@@ -4,11 +4,17 @@
     <button type="button" (click)="updateExample(0)">Example 1</button>
     <button type="button" (click)="updateExample(1)">Example 2</button>
 </div>
+<div>
+    <button type="button" (click)="modeEdit('json')">json</button>
+    <button type="button" (click)="modeEdit('js')">js</button>
+</div>
 
 <main>
     <fieldset class="json">
         <legend>json</legend>
-        <textarea (change)="format($event.target.value)">{{ data | json }}</textarea>
+        <textarea (change)="format($event.target.value)">{{
+            mode === 'json' ? (data | json) : (data | js : 2)
+        }}</textarea>
     </fieldset>
 
     <fieldset class="options">
