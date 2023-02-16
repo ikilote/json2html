@@ -14,7 +14,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "publish:lib": "npm publish dist/json2html",
-    "build:lib": "ng build json2html --configuration production && cp *.md dist/json2html",
+    "build:lib": "ng build json2html --configuration production && cp *.md dist/json2html && cp LICENSE dist/json2html",
     "build:demo": "ng build --configuration production"
   },
   "private": true,
