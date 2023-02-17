@@ -2,22 +2,16 @@
 
 Generation of an HTML plain text from a Json structure with several setting options.
 
-[![npm version](https://badge.fury.io/js/json2html-lib.svg)](https://badge.fury.io/js/json2html-lib) [![Downloads](https://img.shields.io/npm/dm/json2html-lib.svg)](https://www.npmjs.com/package/json2html-lib) [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://git.ikilote.net/angular/json2html/raw/master/LICENSE)
+[![npm version](https://badge.fury.io/js/@ikilote/json2html.svg)](https://badge.fury.io/js/@ikilote/json2html) [![Downloads](https://img.shields.io/npm/dm/@ikilote/json2html.svg)](https://www.npmjs.com/package/@ikilote/json2html) [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://git.ikilote.net/angular/json2html/raw/master/LICENSE)
 
 ## Installation
 
 ```
-npm i json2html-lib --save
+npm i @ikilote/json2html --save
 ```
 
 -   0.0.6 : for View Engine
 -   0.1.0+ : for Ivy
-
-## Requirements
-
-Only for demo:
-
--   Angular 13.2.0 and more
 
 ## Demo
 
@@ -28,7 +22,7 @@ Only for demo:
 ### Examples
 
 ```typescript
-import { Json2html } from 'json2html-lib';
+import { Json2html } from '@ikilote/json2html';
 
 console.log(
     new Json2html(

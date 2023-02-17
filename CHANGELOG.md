@@ -1,4 +1,10 @@
-# Changelog of json2html-lib
+# Changelog of json2html
+
+## V0.3.0 (2023-02-17)
+
+-   rename lib `json2html-lib` to `@ikilote/json2html`
+-   fix quote render
+-   add javascript render in demo
 
 ## V0.2.0 (2022-05-30)
 

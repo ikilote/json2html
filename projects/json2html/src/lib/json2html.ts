@@ -263,10 +263,8 @@ export class Json2html {
                 }
             });
 
-            switch (typeAlign) {
-                case 'prettier':
-                    string += this.options.indent && this._hasMultiline() ? `\n${this._getSpacing(lvl)}` : ' ';
-                    break;
+            if (typeAlign === 'prettier') {
+                string += this.options.indent && this._hasMultiline() ? `\n${this._getSpacing(lvl)}` : ' ';
             }
         }
         return string;
