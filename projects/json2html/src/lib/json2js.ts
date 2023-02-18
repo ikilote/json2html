@@ -23,7 +23,7 @@ export class Json2Js {
                 .replace(/: "([^'\n]*)"(,?\n)/g, `: '$1'$2`)
                 .replace(/: "([^"\n]*)"(,?\n)/g, ': "$1"$2')
                 .replace(/: "([^\n]*)"(,?\n)/g, ': `$1`$2')
-                .replace(/(?<!'?: )(?!`?,?\n)(`)/g, '\\`')
+                .replace(/(?!\s*.+'?: ['"].*)((?<!: )`(?!,|\n))(?!.*['"],?\n)/g, '\\`')
                 .replace(/\(--\)/g, '"')
                 .replace(/([\]}])$/g, ' '.repeat(tabSize * tabAdded) + '$1');
         } catch (e) {
