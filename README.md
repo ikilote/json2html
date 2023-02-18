@@ -10,6 +10,8 @@ Generation of an HTML plain text from a Json structure with several setting opti
 npm i @ikilote/json2html --save
 ```
 
+Note for Angular:
+
 -   0.0.6 : for View Engine
 -   0.1.0+ : for Ivy
 
@@ -19,7 +21,7 @@ npm i @ikilote/json2html --save
 
 ## Usage
 
-### Examples `Json2html`
+### Example `Json2html`
 
 ```typescript
 import { Json2html } from '@ikilote/json2html';
@@ -53,7 +55,7 @@ console.log(
 */
 ```
 
-### Examples `Json2Js`
+### Example `Json2Js`
 
 ```json
 {
@@ -73,7 +75,6 @@ console.log(
 import { Json2html } from '@ikilote/json2html';
 
 console.log(new Json2html(myJson, { tabSize: 2, tadAdded: 1 }).toString());
-
 /*
 {
   tag: 'div',

@@ -4,9 +4,9 @@ import { Json2Js } from 'projects/json2html/src/public_api';
 
 @Pipe({ name: 'js' })
 export class JsPipe implements PipeTransform {
-    transform(json: any, tabSize: number = 4, tab: number = 0): string {
+    transform(json: any, tabSize: number = 4, tabAdded: number = 0): string {
         try {
-            return new Json2Js(json, { tabSize, tab }).toString();
+            return new Json2Js(json, { tabSize, tabAdded }).toString();
         } catch (e) {
             return json;
         }
