@@ -10,7 +10,7 @@ MIT
 @angular/router
 MIT
 
-json2html-lib
+@ikilote/json2html
 MIT
 
 rxjs
