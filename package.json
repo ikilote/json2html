@@ -1,6 +1,6 @@
 {
   "name": "@ikilote/json2html-demo",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "publish:lib": "npm publish dist/json2html",
+    "publish:lib": "cd dist/json2html && npm publish ",
     "build:lib": "ng build json2html --configuration production && cp *.md dist/json2html && cp LICENSE dist/json2html",
     "build:demo": "ng build --configuration production"
   },

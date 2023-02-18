@@ -82,7 +82,7 @@ console.log(new Json2html(myJson, { tabSize: 2, tadAdded: 1 }).toString());
     id: 'test',
     class: 'testclasse',
     test: null,
-    'data-test1': '\`value1\`',
+    'data-test1': '`value1`',
     'data-test2': `'value2'`,
     'data-test3': '"value3"'
   }

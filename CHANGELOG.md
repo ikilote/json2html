@@ -1,5 +1,9 @@
 # Changelog of json2html
 
+## V0.4.1 (2023-02-18)
+
+-   Fix ` protection
+
 ## V0.4.0 (2023-02-18)
 
 -   add `Json2Js` to tranform json to js style
