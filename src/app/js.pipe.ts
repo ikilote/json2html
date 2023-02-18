@@ -1,20 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+import { Json2Js } from 'projects/json2html/src/public_api';
+
 @Pipe({ name: 'js' })
 export class JsPipe implements PipeTransform {
     transform(json: any, tabSize: number = 4, tab: number = 0): string {
         try {
-            return JSON.stringify(json, null, tabSize)
-                .replace(/( {2,}[{\]}"])/g, ' '.repeat(tabSize * tab) + '$1')
-                .replace(/"([a-zA-Z0-9]*)":/g, '$1:')
-                .replace(/"([^"]*)":/g, "'$1':")
-                .replace(/\\"/g, '(--)')
-                .replace(/: "([^'\n]*)"(,?\n)/g, `: '$1'$2`)
-                .replace(/: "([^"\n]*)"(,?\n)/g, ': "$1"$2')
-                .replace(/: "([^\n]*)"(,?\n)/g, ': `$1`$2')
-                .replace(/(?<!'?: )(?!`?,?\n)(`)/g, '\\`')
-                .replace(/\(--\)/g, '"')
-                .replace(/([\]}])$/g, ' '.repeat(tabSize * tab) + '$1');
+            return new Json2Js(json, { tabSize, tab }).toString();
         } catch (e) {
             return json;
         }

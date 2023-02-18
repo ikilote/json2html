@@ -23,6 +23,7 @@
     "html",
     "json",
     "xml",
-    "json-to-html"
+    "json-to-html",
+    "json-to-js"
   ]
 }

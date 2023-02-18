@@ -19,7 +19,7 @@ npm i @ikilote/json2html --save
 
 ## Usage
 
-### Examples
+### Examples `Json2html`
 
 ```typescript
 import { Json2html } from '@ikilote/json2html';
@@ -50,6 +50,42 @@ console.log(
         test
     </div>
 </div>
+*/
+```
+
+### Examples `Json2Js`
+
+```json
+{
+    "tag": "div",
+    "attrs": {
+        "id": "test",
+        "class": "testclasse",
+        "test": null,
+        "data-test1": "`value1`",
+        "data-test2": "'value2'",
+        "data-test3": "\"value3\""
+    }
+}
+```
+
+```typescript
+import { Json2html } from '@ikilote/json2html';
+
+console.log(new Json2html(myJson, { tabSize: 2, tadAdded: 1 }).toString());
+
+/*
+{
+  tag: 'div',
+  attrs: {
+    id: 'test',
+    class: 'testclasse',
+    test: null,
+    'data-test1': '\`value1\`',
+    'data-test2': `'value2'`,
+    'data-test3': '"value3"'
+  }
+}
 */
 ```
 
