@@ -1,5 +1,9 @@
 # Changelog of json2html
 
+## V0.4.2 (2023-05-31)
+
+-   Fix for not crash with old Webkit
+
 ## V0.4.1 (2023-02-18)
 
 -   Fix ` protection
