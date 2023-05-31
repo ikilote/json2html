@@ -14,6 +14,9 @@ export class Json2Js {
     toString(): string {
         const tabSize = Math.max(this.options.tabSize ?? 4, 0);
         const tabAdded = Math.max(this.options.tabAdded ?? 0, 0);
+        /* Local RegExp in order to limit impact on browsers without lookbehind support (ex : Safari) */
+        const backTickReplaceRegex = new RegExp("(?!\\s*.+'?: ['\"].*)((?<!: )`(?!,|\n))(?!.*['\"],?\n)", 'g');
+
         try {
             return (typeof this.json === 'string' ? this.json : JSON.stringify(this.json, null, tabSize))
                 .replace(/( {2,}[{\]}"])/g, ' '.repeat(tabSize * tabAdded) + '$1')
@@ -23,7 +26,7 @@ export class Json2Js {
                 .replace(/: "([^'\n]*)"(,?\n)/g, `: '$1'$2`)
                 .replace(/: "([^"\n]*)"(,?\n)/g, ': "$1"$2')
                 .replace(/: "([^\n]*)"(,?\n)/g, ': `$1`$2')
-                .replace(/(?!\s*.+'?: ['"].*)((?<!: )`(?!,|\n))(?!.*['"],?\n)/g, '\\`')
+                .replace(backTickReplaceRegex, '\\`')
                 .replace(/\(--\)/g, '"')
                 .replace(/([\]}])$/g, ' '.repeat(tabSize * tabAdded) + '$1');
         } catch (e) {
