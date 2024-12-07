@@ -1,5 +1,5 @@
 export interface Json2htmlAttr {
-    [key: string]: string | number | null;
+    [key: string]: string | number | null | undefined;
 }
 
 export type Json2htmlBody = (Json2htmlRef | string)[] | Json2htmlRef | string;
