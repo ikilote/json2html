@@ -1,14 +1,19 @@
 import { Component } from '@angular/core';
 
+
+
 import { Json2html, Json2htmlOptions, Json2htmlRef } from 'projects/json2html/src/public_api';
 
+
+
 import { examples } from './app.json';
+
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    standalone: false
+    standalone: false,
 })
 export class AppComponent {
     // options
@@ -83,7 +88,7 @@ export class AppComponent {
             if (this.mode === 'json') {
                 this.data = JSON.parse(data);
             } else {
-                this.data = eval(data.replace('\n', ''));
+                this.data = (0, eval)(data.replace('\n', ''));
             }
             this.generated();
         } catch (error) {

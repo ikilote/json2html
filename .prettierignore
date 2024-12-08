@@ -8,3 +8,5 @@
 /node_modules
 /**/polyfills.ts
 /**/public_api.ts
+/projects/json2html/src/test.ts
+/src/test.ts
