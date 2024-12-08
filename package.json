@@ -15,7 +15,8 @@
     "e2e": "ng e2e",
     "publish:lib": "cd dist/json2html && npm publish ",
     "build:lib": "ng build json2html --configuration production && cp *.md dist/json2html && cp LICENSE dist/json2html",
-    "build:demo": "ng build --configuration production"
+    "build:demo": "ng build --configuration production",
+    "format": "npx prettier --write ."
   },
   "private": true,
   "dependencies": {

@@ -5,7 +5,10 @@ export class Json2Js {
      * * `tabSize` tab size (in space)
      * * `tabAdded` additional tabs before all lines
      */
-    constructor(public json: any, public options: { tabSize?: number; tabAdded?: number } = {}) {}
+    constructor(
+        public json: any,
+        public options: { tabSize?: number; tabAdded?: number } = {},
+    ) {}
 
     /**
      * transform Json to js style object

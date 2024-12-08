@@ -11,20 +11,11 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "target": "es2022",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2022",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2022", "dom"],
     "paths": {
-      "json2html": [
-        "dist/json2html"
-      ],
-      "json2html/*": [
-        "dist/json2html/*"
-      ]
+      "json2html": ["dist/json2html"],
+      "json2html/*": ["dist/json2html/*"]
     }
   }
 }

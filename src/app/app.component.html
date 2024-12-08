@@ -1,146 +1,113 @@
 <h1>&#64;ikilote/json2html</h1>
 
 <div>
-    <button type="button" (click)="updateExample(0)">Example 1</button>
-    <button type="button" (click)="updateExample(1)">Example 2</button>
+  <button type="button" (click)="updateExample(0)">Example 1</button>
+  <button type="button" (click)="updateExample(1)">Example 2</button>
 </div>
 <div>
-    <button type="button" (click)="modeEdit('json')">json</button>
-    <button type="button" (click)="modeEdit('js')">js</button>
+  <button type="button" (click)="modeEdit('json')">json</button>
+  <button type="button" (click)="modeEdit('js')">js</button>
 </div>
 
 <main>
-    <fieldset class="json">
-        <legend>json</legend>
-        <textarea (change)="format($event.target.value)">{{
-            mode === 'json' ? (data | json) : (data | js : 2)
-        }}</textarea>
-    </fieldset>
+  <fieldset class="json">
+    <legend>json</legend>
+    <textarea (change)="format($event.target.value)">{{ mode === 'json' ? (data | json) : (data | js: 2) }}</textarea>
+  </fieldset>
 
-    <fieldset class="options">
-        <legend>options</legend>
-        <div>
-            <label>
-                <span>formatting</span>
-                <select [value]="formatting" (change)="formatting = $event.target.value; generated()">
-                    <option value="multiline">
-                        multiline (defaut): structure sur plusieur lignes avec indentation possible
-                    </option>
-                    <option value="inline">inline: all on one line without space</option>
-                </select>
-            </label>
-            <label *ngIf="formatting === 'multiline'">
-                <span>indent</span>
-                <input type="checkbox" [checked]="indent" (change)="indent = $event.target.checked; generated()" />
-            </label>
-            <label *ngIf="indent && formatting === 'multiline'">
-                <span>spaceType</span>
-                <select [value]="spaceType" (change)="spaceType = $event.target.value; generated()">
-                    <option value="space">space (defaut)</option>
-                    <option value="tab">tab</option>
-                </select>
-            </label>
-            <label *ngIf="indent && formatting === 'multiline'">
-                <span>spaceLength</span>
-                <input
-                    [value]="spaceLength"
-                    type="number"
-                    min="0"
-                    (change)="spaceLength = $event.target.value; generated()"
-                />
-            </label>
-            <label *ngIf="indent && formatting === 'multiline'">
-                <span>spaceBase</span>
-                <input
-                    [value]="spaceBase"
-                    type="number"
-                    min="0"
-                    (change)="spaceBase = $event.target.value; generated()"
-                />
-            </label>
-            <label *ngIf="formatting === 'multiline'">
-                <span>attrPosition</span>
-                <select [value]="attrPosition" (change)="attrPosition = $event.target.value; generated()">
-                    <option value="inline">inline: no alignment</option>
-                    <option value="inline space">inline space: wrap with alignment with higher level</option>
-                    <option value="inline alignTag">inline alignTag: wrap with alignment with the tag</option>
-                    <option value="inline alignFirstAttr">
-                        inline alignFirstAttr: wrap alignment with the first attribute
-                    </option>
-                    <option *ngIf="indent" value="space">space: alignment with higher level</option>
-                    <option *ngIf="indent" value="alignTag">alignTag: alignment with the tag</option>
-                    <option *ngIf="indent" value="alignFirstAttr">
-                        alignFirstAttr (default): alignment with the first attribute
-                    </option>
-                    <option *ngIf="indent" value="prettier">prettier: like Prettier formatter</option>
-                </select>
-            </label>
-            <label *ngIf="indent && formatting === 'multiline'">
-                <span>wrapAttrNumber</span>
-                <input
-                    [value]="wrapAttrNumber"
-                    type="number"
-                    min="0"
-                    (change)="wrapAttrNumber = $event.target.value; generated()"
-                />
-            </label>
-            <label *ngIf="formatting === 'multiline'">
-                <span>maxLength (0 = no wrap)</span>
-                <input
-                    [value]="maxLength"
-                    type="number"
-                    min="0"
-                    (change)="maxLength = $event.target.value; generated()"
-                />
-            </label>
-            <label>
-                <span>type</span>
-                <select [value]="type" (change)="type = $event.target.value; generated()">
-                    <option value="html">html (default)</option>
-                    <option value="xml">xml</option>
-                </select>
-            </label>
-            <label>
-                <span>xmlDefaultTag</span>
-                <input
-                    type="text"
-                    [value]="xmlDefaultTag"
-                    (change)="xmlDefaultTag = $event.target.value; generated()"
-                />
-            </label>
-            <label>
-                <span>noContentTags</span>
-                <input
-                    type="text"
-                    [value]="noContentTags"
-                    (change)="noContentTags = $event.target.value; generated()"
-                />
-            </label>
-            <label *ngIf="type === 'html'">
-                <span>removeOptionalEndTags</span>
-                <input
-                    type="checkbox"
-                    [checked]="removeOptionalEndTags"
-                    (change)="removeOptionalEndTags = $event.target.checked; generated()"
-                />
-            </label>
-            <label *ngIf="type === 'html'">
-                <span>optionalEndTags</span>
-                <input
-                    type="text"
-                    [value]="optionalEndTags"
-                    (change)="optionalEndTags = $event.target.value; generated()"
-                />
-            </label>
-        </div>
-    </fieldset>
+  <fieldset class="options">
+    <legend>options</legend>
+    <div>
+      <label>
+        <span>formatting</span>
+        <select [value]="formatting" (change)="formatting = $event.target.value; generated()">
+          <option value="multiline">multiline (defaut): structure sur plusieur lignes avec indentation possible</option>
+          <option value="inline">inline: all on one line without space</option>
+        </select>
+      </label>
+      <label *ngIf="formatting === 'multiline'">
+        <span>indent</span>
+        <input type="checkbox" [checked]="indent" (change)="indent = $event.target.checked; generated()" />
+      </label>
+      <label *ngIf="indent && formatting === 'multiline'">
+        <span>spaceType</span>
+        <select [value]="spaceType" (change)="spaceType = $event.target.value; generated()">
+          <option value="space">space (defaut)</option>
+          <option value="tab">tab</option>
+        </select>
+      </label>
+      <label *ngIf="indent && formatting === 'multiline'">
+        <span>spaceLength</span>
+        <input [value]="spaceLength" type="number" min="0" (change)="spaceLength = $event.target.value; generated()" />
+      </label>
+      <label *ngIf="indent && formatting === 'multiline'">
+        <span>spaceBase</span>
+        <input [value]="spaceBase" type="number" min="0" (change)="spaceBase = $event.target.value; generated()" />
+      </label>
+      <label *ngIf="formatting === 'multiline'">
+        <span>attrPosition</span>
+        <select [value]="attrPosition" (change)="attrPosition = $event.target.value; generated()">
+          <option value="inline">inline: no alignment</option>
+          <option value="inline space">inline space: wrap with alignment with higher level</option>
+          <option value="inline alignTag">inline alignTag: wrap with alignment with the tag</option>
+          <option value="inline alignFirstAttr">inline alignFirstAttr: wrap alignment with the first attribute</option>
+          <option *ngIf="indent" value="space">space: alignment with higher level</option>
+          <option *ngIf="indent" value="alignTag">alignTag: alignment with the tag</option>
+          <option *ngIf="indent" value="alignFirstAttr">
+            alignFirstAttr (default): alignment with the first attribute
+          </option>
+          <option *ngIf="indent" value="prettier">prettier: like Prettier formatter</option>
+        </select>
+      </label>
+      <label *ngIf="indent && formatting === 'multiline'">
+        <span>wrapAttrNumber</span>
+        <input
+          [value]="wrapAttrNumber"
+          type="number"
+          min="0"
+          (change)="wrapAttrNumber = $event.target.value; generated()"
+        />
+      </label>
+      <label *ngIf="formatting === 'multiline'">
+        <span>maxLength (0 = no wrap)</span>
+        <input [value]="maxLength" type="number" min="0" (change)="maxLength = $event.target.value; generated()" />
+      </label>
+      <label>
+        <span>type</span>
+        <select [value]="type" (change)="type = $event.target.value; generated()">
+          <option value="html">html (default)</option>
+          <option value="xml">xml</option>
+        </select>
+      </label>
+      <label>
+        <span>xmlDefaultTag</span>
+        <input type="text" [value]="xmlDefaultTag" (change)="xmlDefaultTag = $event.target.value; generated()" />
+      </label>
+      <label>
+        <span>noContentTags</span>
+        <input type="text" [value]="noContentTags" (change)="noContentTags = $event.target.value; generated()" />
+      </label>
+      <label *ngIf="type === 'html'">
+        <span>removeOptionalEndTags</span>
+        <input
+          type="checkbox"
+          [checked]="removeOptionalEndTags"
+          (change)="removeOptionalEndTags = $event.target.checked; generated()"
+        />
+      </label>
+      <label *ngIf="type === 'html'">
+        <span>optionalEndTags</span>
+        <input type="text" [value]="optionalEndTags" (change)="optionalEndTags = $event.target.value; generated()" />
+      </label>
+    </div>
+  </fieldset>
 
-    <fieldset class="rendu">
-        <legend>Rendu</legend>
-        <textarea>{{ html }}</textarea>
-    </fieldset>
+  <fieldset class="rendu">
+    <legend>Rendu</legend>
+    <textarea>{{ html }}</textarea>
+  </fieldset>
 </main>
 
 <footer>
-    <a href="https://git.ikilote.net/typescript/json2html">Source code</a>
+  <a href="https://git.ikilote.net/typescript/json2html">Source code</a>
 </footer>

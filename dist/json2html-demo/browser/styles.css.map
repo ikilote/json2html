@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/styles.scss"],
+  "sourcesContent": ["/* You can add global styles to this file, and also import other style files */\nbody {\n    font-family: sans;\n}\n\n* {\n    box-sizing: border-box;\n}\n"],
+  "mappings": ";AACA;AACI,eAAA;;AAGJ;AACI,cAAA;;",
+  "names": []
+}

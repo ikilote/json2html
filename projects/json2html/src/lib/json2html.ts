@@ -124,7 +124,10 @@ export class Json2html {
      * @param json one ou list of node data
      * @param option formating options
      */
-    constructor(public json: Json2htmlRef | Json2htmlRef[], option: Json2htmlOptions = {}) {
+    constructor(
+        public json: Json2htmlRef | Json2htmlRef[],
+        option: Json2htmlOptions = {},
+    ) {
         Object.assign(this.options, option);
     }
 

@@ -1,0 +1,10 @@
+/* src/styles.scss */
+body {
+  font-family: sans;
+}
+* {
+  box-sizing: border-box;
+}
+
+/* angular:styles/global:styles */
+/*# sourceMappingURL=styles.css.map */

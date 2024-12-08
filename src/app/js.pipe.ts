@@ -4,7 +4,7 @@ import { Json2Js } from 'projects/json2html/src/public_api';
 
 @Pipe({
     name: 'js',
-    standalone: false
+    standalone: false,
 })
 export class JsPipe implements PipeTransform {
     transform(json: any, tabSize: number = 4, tabAdded: number = 0): string {

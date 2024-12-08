@@ -1,13 +1,8 @@
 import { Component } from '@angular/core';
 
-
-
 import { Json2html, Json2htmlOptions, Json2htmlRef } from 'projects/json2html/src/public_api';
 
-
-
 import { examples } from './app.json';
-
 
 @Component({
     selector: 'app-root',

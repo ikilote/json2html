@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/app.component.scss"],
+  "sourcesContent": ["main {\n    display: grid;\n    grid-template: 'a b c' / 2fr 2fr 2fr;\n}\n\nform {\n    flex: 3;\n}\n\naside {\n    flex: 2;\n    padding: 0 15px;\n}\n\ntextarea {\n    width: 100%;\n    min-height: 600px;\n    resize: vertical;\n}\n\ninput:not([type='checkbox']):not([type='radio']),\nselect {\n    width: 100%;\n}\n\nlabel {\n    display: block;\n\n    & > span {\n        display: block;\n        font-weight: 700;\n    }\n}\n"],
+  "mappings": ";AAAA;AACI,WAAA;AACA,iBAAA,OAAA,CAAA,IAAA,IAAA;;AAGJ;AACI,QAAA;;AAGJ;AACI,QAAA;AACA,WAAA,EAAA;;AAGJ;AACI,SAAA;AACA,cAAA;AACA,UAAA;;AAGJ,KAAA,KAAA,CAAA,eAAA,KAAA,CAAA;AAAA;AAEI,SAAA;;AAGJ;AACI,WAAA;;AAEA,MAAA,EAAA;AACI,WAAA;AACA,eAAA;;",
+  "names": []
+}

@@ -12,8 +12,8 @@ npm i @ikilote/json2html --save
 
 Note for Angular:
 
--   0.0.6 : for View Engine
--   0.1.0+ : for Ivy
+- 0.0.6 : for View Engine
+- 0.1.0+ : for Ivy
 
 ## Demo
 
