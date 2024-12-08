@@ -1,5 +1,10 @@
 # Changelog of json2html
 
+## V0.5.0 (2024-12-08)
+
+- Json2htmlAttr is missing state undefined
+- update demo to Angular 19
+
 ## V0.4.2 (2023-05-31)
 
 - Fix for not crash with old Webkit
