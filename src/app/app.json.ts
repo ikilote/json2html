@@ -6,7 +6,7 @@ export const examples = [
             'test',
             {
                 tag: 'div',
-                attrs: { id: 'test2', class: 'foobar' },
+                attrs: { id: 'test2', class: 'foobar', '(click)': ['action1()', 'action2()'] },
                 body: 'test',
             },
         ],

@@ -1,5 +1,5 @@
 export interface Json2htmlAttr {
-    [key: string]: string | number | null | undefined;
+    [key: string]: string | string[] | number | number[] | null | undefined;
 }
 
 export type Json2htmlBody = (Json2htmlRef | string)[] | Json2htmlRef | string;
@@ -197,72 +197,77 @@ export class Json2html {
             let count = 1;
 
             Object.keys(attrs).forEach((id, index, array) => {
-                const value = attrs[id];
-                if (value !== undefined) {
-                    const attrCurrent = `${id}${
-                        value !== null || value ? `="${String(value).replace(/"/g, '&quote;')}"` : ''
-                    }`;
+                const v = attrs[id];
+                const values = !Array.isArray(v) ? [v] : v;
+                for (const value of values) {
+                    if (value !== undefined) {
+                        const attrCurrent = `${id}${
+                            value !== null || value ? `="${String(value).replace(/"/g, '&quote;')}"` : ''
+                        }`;
 
-                    let attr = '';
-                    let attrAdd = '';
-                    const [align, type] = typeAlign.split(' ');
+                        let attr = '';
+                        let attrAdd = '';
+                        const [align, type] = typeAlign.split(' ');
 
-                    switch (align) {
-                        case 'inline':
-                            if (
-                                !this.options.maxLength ||
-                                (
-                                    attrLine.replace(/\n/g, '') +
-                                    (count > 1 ? ' ' : '') +
-                                    attrCurrent +
-                                    (index === array.length - 1 ? '>' : '')
-                                ).length < this.options.maxLength ||
-                                type === undefined
-                            ) {
-                                attrAdd = ' ';
-                                count++;
-                            } else {
-                                switch (type) {
-                                    case 'space':
-                                        attrAdd = `\n${this._getSpacing(lvl + 1)}`;
-                                        break;
-                                    case 'alignTag':
-                                        attrAdd = `\n${this._getSpacing(lvl, 1)}`;
-                                        break;
-                                    case 'alignFirstAttr':
-                                        attrAdd = `\n${this._getSpacing(lvl, json.tag.length + 2)}`;
-                                        break;
+                        switch (align) {
+                            case 'inline':
+                                if (
+                                    !this.options.maxLength ||
+                                    (
+                                        attrLine.replace(/\n/g, '') +
+                                        (count > 1 ? ' ' : '') +
+                                        attrCurrent +
+                                        (index === array.length - 1 ? '>' : '')
+                                    ).length < this.options.maxLength ||
+                                    type === undefined
+                                ) {
+                                    attrAdd = ' ';
+                                    count++;
+                                } else {
+                                    switch (type) {
+                                        case 'space':
+                                            attrAdd = `\n${this._getSpacing(lvl + 1)}`;
+                                            break;
+                                        case 'alignTag':
+                                            attrAdd = `\n${this._getSpacing(lvl, 1)}`;
+                                            break;
+                                        case 'alignFirstAttr':
+                                            attrAdd = `\n${this._getSpacing(lvl, json.tag.length + 2)}`;
+                                            break;
+                                    }
+                                    attrLine = '';
+                                    count = 1;
                                 }
-                                attrLine = '';
-                                count = 1;
-                            }
-                            break;
-                        case 'space':
-                            attrAdd =
-                                string && this.options.indent && this._hasMultiline()
-                                    ? `\n${this._getSpacing(lvl + 1)}`
-                                    : ' ';
-                            break;
-                        case 'alignTag':
-                            attrAdd =
-                                string && this.options.indent && this._hasMultiline()
-                                    ? `\n${this._getSpacing(lvl, 1)}`
-                                    : ' ';
-                            break;
-                        case 'alignFirstAttr':
-                            attrAdd =
-                                string && this.options.indent && this._hasMultiline()
-                                    ? `\n${this._getSpacing(lvl, json.tag.length + 2)}`
-                                    : ' ';
-                            break;
-                        case 'prettier':
-                            attrAdd =
-                                this.options.indent && this._hasMultiline() ? `\n${this._getSpacing(lvl + 1)}` : ' ';
-                            break;
+                                break;
+                            case 'space':
+                                attrAdd =
+                                    string && this.options.indent && this._hasMultiline()
+                                        ? `\n${this._getSpacing(lvl + 1)}`
+                                        : ' ';
+                                break;
+                            case 'alignTag':
+                                attrAdd =
+                                    string && this.options.indent && this._hasMultiline()
+                                        ? `\n${this._getSpacing(lvl, 1)}`
+                                        : ' ';
+                                break;
+                            case 'alignFirstAttr':
+                                attrAdd =
+                                    string && this.options.indent && this._hasMultiline()
+                                        ? `\n${this._getSpacing(lvl, json.tag.length + 2)}`
+                                        : ' ';
+                                break;
+                            case 'prettier':
+                                attrAdd =
+                                    this.options.indent && this._hasMultiline()
+                                        ? `\n${this._getSpacing(lvl + 1)}`
+                                        : ' ';
+                                break;
+                        }
+                        attr = attrAdd + attrCurrent;
+                        attrLine += attr;
+                        string += attr;
                     }
-                    attr = attrAdd + attrCurrent;
-                    attrLine += attr;
-                    string += attr;
                 }
             });
 
