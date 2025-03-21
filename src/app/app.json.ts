@@ -1,4 +1,6 @@
-export const examples = [
+import { Json2htmlObject } from "projects/json2html/src/public_api";
+
+export const examples : Json2htmlObject[] = [
     {
         tag: 'div',
         attrs: { id: 'test1', class: 'testclasse' },
@@ -6,7 +8,7 @@ export const examples = [
             'test',
             {
                 tag: 'div',
-                attrs: { id: 'test2', class: 'foobar', '(click)': ['action1()', 'action2()'] },
+                attrs: { id: 'test2', class: 'foobar' },
                 body: 'test',
             },
         ],
@@ -82,4 +84,58 @@ export const examples = [
             inline: true,
         },
     ],
+    {
+        tag: 'div',
+        attrs: { id: 'test1', class: 'testclasse' },
+        body: [
+            'test',
+            {
+                tag: 'div',
+                attrs: { id: 'test2', class: 'foobar', '(click)': ['action1()', 'action2()'] },
+                body: 'test',
+            },
+            {
+                annotation: 'let',
+                value: 'a = "2"'
+            },
+            {
+                annotation: 'if',
+                conditional : 'a === "1"',
+                body: {
+                    tag: 'a',
+                    attrs: { href: 'https://example.com' },
+                    body: 'lien',
+                },
+            },
+            {
+                annotation: 'else',
+                body: {
+                    tag: 'a',
+                    attrs: { href: 'https://test.com' },
+                    body: 'lien',
+                },
+                attached : true
+            },
+            {
+                annotation: 'switch',
+                conditional : 'a',
+                body: [
+                    {
+                        annotation: 'case',
+                        conditional : 'caseA',
+                        body: "Value A",
+                    },
+                    {
+                        annotation: 'case',
+                        conditional : 'caseB',
+                        body: "Value B",
+                    },
+                    {
+                        annotation: 'default',
+                        body: "Default",
+                    }
+                ],
+            },
+        ],
+    },
 ];

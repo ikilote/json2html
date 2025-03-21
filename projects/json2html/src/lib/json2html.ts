@@ -2,7 +2,19 @@ export interface Json2htmlAttr {
     [key: string]: string | string[] | number | number[] | null | undefined;
 }
 
-export type Json2htmlBody = (Json2htmlRef | string)[] | Json2htmlRef | string;
+export type Json2htmlObject =
+    | Json2htmlRef
+    | Json2htmlRef[]
+    | Json2annotationRef
+    | Json2annotationRef[]
+    | Json2annotationValue
+    | Json2annotationValue[];
+export type Json2htmlBody =
+    | (Json2htmlRef | Json2annotationRef | Json2annotationValue | string)[]
+    | Json2htmlRef
+    | Json2annotationRef
+    | Json2annotationValue
+    | string;
 
 export interface Json2htmlRef {
     /** tag name */
@@ -15,6 +27,24 @@ export interface Json2htmlRef {
     inline?: boolean;
     /** autoclose: ignore body and end tag */
     autoclose?: boolean;
+}
+
+export interface Json2annotationRef {
+    /** annotation name */
+    annotation: string;
+    /** conditional */
+    conditional?: string;
+    /** content of annotation */
+    body?: Json2htmlBody;
+    /** attached to the previous annotation */
+    attached: boolean;
+}
+
+export interface Json2annotationValue {
+    /** annotation name */
+    annotation: string;
+    /** annotation value */
+    value?: string;
 }
 
 export interface Json2htmlOptions {
@@ -122,10 +152,10 @@ export class Json2html {
 
     /**
      * @param json one ou list of node data
-     * @param option formating options
+     * @param option formatting options
      */
     constructor(
-        public json: Json2htmlRef | Json2htmlRef[],
+        public json: Json2htmlObject,
         option: Json2htmlOptions = {},
     ) {
         Object.assign(this.options, option);
@@ -138,17 +168,38 @@ export class Json2html {
         let html = '';
         const inline = this.options.formatting === 'inline';
         if (!Array.isArray(this.json)) {
-            html = `${this._getSpacing(0)}${this._generate(0, this.json, inline)}`;
+            if ('annotation' in this.json) {
+                html = `${this._getSpacing(0)}${this._generateAnnotation(0, this.json, inline)}`;
+            } else {
+                html = `${this._getSpacing(0)}${this._generateTag(0, this.json, inline)}`;
+            }
         } else {
             this.json.forEach((element, index) => {
-                html += `${index > 0 && !inline ? '\n' : ''}${this._getSpacing(0)}${this._generate(
-                    0,
-                    element,
-                    inline,
-                )}`;
+                const spacing = `${index > 0 && !inline ? '\n' : ''}${this._getSpacing(0)}`;
+                if ('annotation' in element) {
+                    html += `${this.json[index + 1]?.attached ? ' ' : spacing}${this._generateAnnotation(0, element, inline)}`;
+                } else {
+                    html += `${spacing}${this._generateTag(0, element, inline)}`;
+                }
             });
         }
         return html;
+    }
+
+    private _generateAnnotation(lvl: number, json: Json2annotationRef | Json2annotationValue, inline: boolean = false) {
+        if ('value' in json) {
+            return `@${json.annotation} ${json.value};`;
+        } else {
+            let string = `@${json.annotation}${'conditional' in json ? ` (${json.conditional})` : ``} \{`;
+
+            let tagContent = this._generateBody(lvl, json as Json2annotationRef, inline);
+            if (tagContent && this._hasMultiline() && !inline) {
+                tagContent = `${tagContent}\n${this._getSpacing(lvl)}`;
+            }
+            string += tagContent;
+            string += `}`;
+            return string;
+        }
     }
 
     /**
@@ -158,16 +209,16 @@ export class Json2html {
      * @param inline force inline
      * @returns render of node
      */
-    private _generate(lvl: number, json: Json2htmlRef, inline: boolean = false): string {
+    private _generateTag(lvl: number, json: Json2htmlRef, inline: boolean = false): string {
         const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
         const xmlAutoClose = (!hasContent || json.autoclose) && this._modeXML() ? '/' : '';
         let string = `<${json.tag}${this._generateAttrs(lvl, json, inline || json.inline)}${xmlAutoClose}>`;
         if (hasContent && !json.autoclose) {
-            let tagcontent = this._generateBody(lvl, json, inline || json.inline);
-            if (tagcontent && this._hasMultiline() && !(inline || json.inline)) {
-                tagcontent = `${tagcontent}\n${this._getSpacing(lvl)}`;
+            let tagContent = this._generateBody(lvl, json, inline || json.inline);
+            if (tagContent && this._hasMultiline() && !(inline || json.inline)) {
+                tagContent = `${tagContent}\n${this._getSpacing(lvl)}`;
             }
-            string += tagcontent;
+            string += tagContent;
             if (
                 !this.options.removeOptionalEndTags ||
                 this._modeXML() ||
@@ -285,14 +336,25 @@ export class Json2html {
      * @param inline force inline
      * @returns render of body
      */
-    private _generateBody(lvl: number, json: Json2htmlRef, inline: boolean) {
+    private _generateBody(lvl: number, json: Json2htmlRef | Json2annotationRef, inline: boolean) {
         let string = '';
         if (json.body) {
             if (!Array.isArray(json.body)) {
                 string += this._generateBodyElement(lvl, json.body, true, inline);
             } else {
-                json.body.forEach(element => {
-                    string += this._generateBodyElement(lvl, element, false, inline);
+                json.body.forEach((element, index) => {
+                    let attached = false;
+                    if (
+                        typeof element === 'object' &&
+                        'attached' in element &&
+                        json.body[index - 1] &&
+                        'annotation' in json.body[index - 1] &&
+                        !('value' in json.body[index - 1])
+                    ) {
+                        attached = element.attached;
+                    }
+
+                    string += this._generateBodyElement(lvl, element, false, inline, attached);
                 });
             }
         }
@@ -305,16 +367,20 @@ export class Json2html {
      * @param element node data or string
      * @param onlyOne body this an unique node
      * @param inline force inline
+     * @param attached attache to the previous element (for annotation)
      * @returns render of body
      */
     private _generateBodyElement(
         lvl: number,
-        element: Json2htmlRef | string,
+        element: Json2htmlRef | Json2annotationRef | Json2annotationValue | string,
         onlyOne: boolean,
         inline: boolean = false,
+        attached: boolean = false,
     ): string {
         let string = '';
-        if (this._hasMultiline() && !inline) {
+        if (attached) {
+            string += ' ';
+        } else if (this._hasMultiline() && !inline) {
             string += `\n${this._getSpacing(lvl + 1)}`;
         }
 
@@ -329,19 +395,21 @@ export class Json2html {
         string +=
             typeof element === 'string'
                 ? this._formatText(lvl + 1, element, inline)
-                : this._generate(lvl + 1, element, inline);
+                : 'annotation' in element
+                  ? this._generateAnnotation(lvl + 1, element, inline)
+                  : this._generateTag(lvl + 1, element, inline);
         return string;
     }
 
     /**
-     * formated string
+     * formatted string
      * @param lvl level node
      * @param string text
      * @param inline inline
      * @returns render of string
      */
     private _formatText(lvl: number, string: string, inline: boolean = false): string {
-        let formatedText = '';
+        let formattedText = '';
         const space = this._getSpacing(lvl);
         if (!inline && this.options.maxLength) {
             const list = string.split('\n');
@@ -353,15 +421,15 @@ export class Json2html {
                         if ((space + lineBuild + (lineBuild ? ' ' : '') + frag).length < this.options.maxLength) {
                             lineBuild += (lineBuild ? ' ' : '') + frag;
                         } else {
-                            formatedText += (formatedText ? '\n' + space : '') + lineBuild;
+                            formattedText += (formattedText ? '\n' + space : '') + lineBuild;
                             lineBuild = frag;
                         }
                     }
                 }
-                formatedText += (formatedText ? '\n' + space : '') + (lineBuild || line);
+                formattedText += (formattedText ? '\n' + space : '') + (lineBuild || line);
             }
         }
-        return formatedText || string;
+        return formattedText || string;
     }
 
     /**

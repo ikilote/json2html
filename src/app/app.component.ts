@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Json2html, Json2htmlOptions, Json2htmlRef } from 'projects/json2html/src/public_api';
+import { Json2html, Json2htmlObject, Json2htmlOptions } from 'projects/json2html/src/public_api';
 
 import { examples } from './app.json';
 
@@ -61,7 +61,7 @@ export class AppComponent {
         'tr',
     ].toString();
 
-    data: Json2htmlRef | Json2htmlRef[];
+    data: Json2htmlObject;
     html: string;
 
     mode: 'json' | 'js' = 'json';
