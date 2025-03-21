@@ -1,9 +1,14 @@
 # Changelog of json2html
 
+## V0.6.0 (2025-03-21)
+
+- Add Angular annotation support
+- Allows having the same arguments multiple times explicitly through an array
+
 ## V0.5.0 (2024-12-08)
 
 - Json2htmlAttr is missing state undefined
-- update demo to Angular 19
+- Update demo to Angular 19
 
 ## V0.4.2 (2023-05-31)
 
