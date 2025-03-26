@@ -4,16 +4,34 @@ export interface Json2htmlAttr {
 
 export type Json2htmlObject =
     | Json2htmlRef
-    | Json2htmlRef[]
     | Json2annotationRef
-    | Json2annotationRef[]
     | Json2annotationValue
-    | Json2annotationValue[];
+    | (
+          | Json2htmlRef
+          | Json2annotationRef
+          | Json2annotationValue
+          | Json2CommentRef
+          | Json2CdataRef
+          | Json2DoctypeRef
+          | Json2XmlRef
+          | Json2EmptyLine
+      )[];
 export type Json2htmlBody =
-    | (Json2htmlRef | Json2annotationRef | Json2annotationValue | string)[]
+    | (
+          | Json2htmlRef
+          | Json2annotationRef
+          | Json2annotationValue
+          | Json2CommentRef
+          | Json2CdataRef
+          | Json2EmptyLine
+          | string
+      )[]
     | Json2htmlRef
     | Json2annotationRef
     | Json2annotationValue
+    | Json2CommentRef
+    | Json2CdataRef
+    | Json2EmptyLine
     | string;
 
 export interface Json2htmlRef {
@@ -45,6 +63,33 @@ export interface Json2annotationValue {
     annotation: string;
     /** annotation value */
     value?: string;
+}
+
+export interface Json2DoctypeRef {
+    /** doctype content */
+    doctype: string;
+}
+
+export interface Json2XmlRef {
+    /** <?xml?> attributes */
+    xmlAttrs: Json2htmlAttr;
+    /** inline : override formatting option for this element and these children */
+    inline?: boolean;
+}
+
+export interface Json2CommentRef {
+    /** comment value */
+    comment: string;
+}
+
+export interface Json2CdataRef {
+    /** comment value */
+    cdata: string;
+}
+
+export interface Json2EmptyLine {
+    /** Add empty line(s) */
+    emptyLine: null | number;
 }
 
 export interface Json2htmlOptions {
@@ -176,8 +221,30 @@ export class Json2html {
         } else {
             this.json.forEach((element, index) => {
                 const spacing = `${index > 0 && !inline ? '\n' : ''}${this._getSpacing(0)}`;
-                if ('annotation' in element) {
-                    html += `${this.json[index]?.attached ? ' ' : spacing}${this._generateAnnotation(0, element, inline)}`;
+                if ('doctype' in element) {
+                    html += `${spacing}<!doctype ${element.doctype}>`;
+                } else if ('xmlAttrs' in element) {
+                    html += `${spacing}${this._generateXmlAttr(0, element, inline)}`;
+                } else if ('cdata' in element) {
+                    html += `${spacing}<![CDATA[${element.cdata}]]>`;
+                } else if ('comment' in element) {
+                    html += `${spacing}<!-- ${element.comment} -->`;
+                } else if ('annotation' in element) {
+                    html += `${
+                        this.json[index]?.attached ? ' ' : spacing
+                    }${this._generateAnnotation(0, element, inline)}`;
+                } else if ('emptyLine' in element) {
+                    html += `${this._getSpacing(0)}${
+                        inline
+                            ? ''
+                            : '\n'.repeat(
+                                  +element.emptyLine && +element.emptyLine > 1
+                                      ? +element.emptyLine - (index === 0 ? 1 : 0)
+                                      : index === 0
+                                        ? 0
+                                        : 1,
+                              )
+                    }`;
                 } else {
                     html += `${spacing}${this._generateTag(0, element, inline)}`;
                 }
@@ -186,6 +253,13 @@ export class Json2html {
         return html;
     }
 
+    /**
+     * Generate Angular annotation(`@`) template
+     * @param lvl node level
+     * @param json node data
+     * @param inline force inline
+     * @returns render of node
+     */
     private _generateAnnotation(lvl: number, json: Json2annotationRef | Json2annotationValue, inline: boolean = false) {
         if ('value' in json) {
             return `@${json.annotation} ${json.value};`;
@@ -200,6 +274,24 @@ export class Json2html {
             string += `}`;
             return string;
         }
+    }
+
+    /**
+     *  Generate XML special tag `<?xml ?>`
+     * @param lvl node level
+     * @param json node data
+     * @param inline force inline
+     * @returns render of node
+     */
+    private _generateXmlAttr(lvl: number, json: Json2XmlRef, inline: boolean = false) {
+        return `<?xml${this._generateAttrs(
+            lvl,
+            {
+                tag: '?xml',
+                attrs: json.xmlAttrs,
+            },
+            inline || json.inline,
+        )}?>`;
     }
 
     /**
@@ -336,9 +428,19 @@ export class Json2html {
      * @param inline force inline
      * @returns render of body
      */
-    private _generateBody(lvl: number, json: Json2htmlRef | Json2annotationRef, inline: boolean) {
+    private _generateBody(
+        lvl: number,
+        json: Json2htmlRef | Json2annotationRef | Json2CommentRef | Json2CdataRef | Json2EmptyLine,
+        inline: boolean,
+    ) {
         let string = '';
-        if (json.body) {
+        if ('cdata' in json) {
+            return `${this._getSpacing(0)}<![CDATA[${json.cdata}]]>`;
+        } else if ('comment' in json) {
+            return `${this._getSpacing(0)}<!-- ${json.comment} -->`;
+        } else if ('emptyLine' in json) {
+            return `${this._getSpacing(0)}${this.emptyLines(json, inline)}`;
+        } else if ('body' in json) {
             if (!Array.isArray(json.body)) {
                 string += this._generateBodyElement(lvl, json.body, true, inline);
             } else {
@@ -372,7 +474,14 @@ export class Json2html {
      */
     private _generateBodyElement(
         lvl: number,
-        element: Json2htmlRef | Json2annotationRef | Json2annotationValue | string,
+        element:
+            | Json2htmlRef
+            | Json2annotationRef
+            | Json2annotationValue
+            | Json2CommentRef
+            | Json2CdataRef
+            | Json2EmptyLine
+            | string,
         onlyOne: boolean,
         inline: boolean = false,
         attached: boolean = false,
@@ -392,12 +501,20 @@ export class Json2html {
             };
         }
 
-        string +=
-            typeof element === 'string'
-                ? this._formatText(lvl + 1, element, inline)
-                : 'annotation' in element
-                  ? this._generateAnnotation(lvl + 1, element, inline)
-                  : this._generateTag(lvl + 1, element, inline);
+        if (typeof element === 'string') {
+            string += this._formatText(lvl + 1, element, inline);
+        } else if ('annotation' in element) {
+            string += this._generateAnnotation(lvl + 1, element, inline);
+        } else if ('cdata' in element) {
+            string += `${this._getSpacing(0)}<![CDATA[${element.cdata}]]>`;
+        } else if ('comment' in element) {
+            string += `${this._getSpacing(0)}<!-- ${element.comment} -->`;
+        } else if ('emptyLine' in element) {
+            return `${this._getSpacing(0)}${this.emptyLines(element, inline)}`;
+        } else {
+            string += this._generateTag(lvl + 1, element, inline);
+        }
+
         return string;
     }
 
@@ -458,5 +575,15 @@ export class Json2html {
                   (lvl + +this.options.spaceBase) * +this.options.spaceLength,
               ) + ' '.repeat(addition)
             : '';
+    }
+
+    /**
+     * add empty lines
+     * @param lines infos
+     * @params inline inline
+     * @returns empty lines
+     */
+    private emptyLines(element: Json2EmptyLine, inline: boolean): string {
+        return inline ? '' : '\n'.repeat(+element.emptyLine && +element.emptyLine > 1 ? +element.emptyLine : 1);
     }
 }
