@@ -2,7 +2,7 @@
 
 Generation of an HTML plain text from a Json structure with several setting options.
 
-[![npm version](https://badge.fury.io/js/@ikilote/json2html.svg)](https://badge.fury.io/js/@ikilote/json2html) [![Downloads](https://img.shields.io/npm/dm/@ikilote/json2html.svg)](https://www.npmjs.com/package/@ikilote/json2html) [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://git.ikilote.net/angular/json2html/raw/master/LICENSE)
+[![npm version](https://badge.fury.io/js/@ikilote%2Fjson2html.svg)](https://badge.fury.io/js/@ikilote%2Fjson2html) [![Downloads](https://img.shields.io/npm/dm/@ikilote%2Fjson2html.svg)](https://www.npmjs.com/package/@ikilote%2Fjson2html) [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://git.ikilote.net/angular/json2html/raw/master/LICENSE)
 
 ## Installation
 
@@ -14,6 +14,15 @@ Note for Angular:
 
 - 0.0.6 : for View Engine
 - 0.1.0+ : for Ivy
+
+## features
+
+- **Json2HTML**: json or js object →
+    - HTML
+    - XML
+    - Angular template string
+- **Json2Js**: json →
+    - js object string
 
 ## Demo
 
@@ -52,6 +61,87 @@ console.log(
         test
     </div>
 </div>
+*/
+```
+
+```typescript
+import { Json2html } from '@ikilote/json2html';
+
+console.log(
+    new Json2html(
+        [
+            {
+                annotation: 'let',
+                value: 'a = "2"',
+            },
+            {
+                annotation: 'if',
+                conditional: 'a === "1"',
+                body: {
+                    tag: 'a',
+                    attrs: {
+                        href: 'https://example.com',
+                    },
+                    body: 'lien',
+                },
+            },
+            {
+                annotation: 'else',
+                body: {
+                    tag: 'a',
+                    attrs: {
+                        href: 'https://test.com',
+                    },
+                    body: 'lien',
+                },
+                attached: true,
+            },
+            {
+                annotation: 'switch',
+                conditional: 'a',
+                body: [
+                    {
+                        annotation: 'case',
+                        conditional: 'caseA',
+                        body: 'Value A',
+                    },
+                    {
+                        annotation: 'case',
+                        conditional: 'caseB',
+                        body: 'Value B',
+                    },
+                    {
+                        annotation: 'default',
+                        body: 'Default',
+                    },
+                ],
+            },
+        ],
+        { formatting: 'multiline' },
+    ).toString(),
+);
+/*
+@let a = "2";
+@if (a === "1") {
+    <a href="https://example.com">
+        lien
+    </a>
+} @else {
+    <a href="https://test.com">
+        lien
+    </a>
+}
+@switch (a) {
+    @case (caseA) {
+        Value A
+    }
+    @case (caseB) {
+        Value B
+    }
+    @default {
+        Default
+    }
+}
 */
 ```
 
