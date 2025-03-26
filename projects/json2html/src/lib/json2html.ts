@@ -177,7 +177,7 @@ export class Json2html {
             this.json.forEach((element, index) => {
                 const spacing = `${index > 0 && !inline ? '\n' : ''}${this._getSpacing(0)}`;
                 if ('annotation' in element) {
-                    html += `${this.json[index + 1]?.attached ? ' ' : spacing}${this._generateAnnotation(0, element, inline)}`;
+                    html += `${this.json[index]?.attached ? ' ' : spacing}${this._generateAnnotation(0, element, inline)}`;
                 } else {
                     html += `${spacing}${this._generateTag(0, element, inline)}`;
                 }
