@@ -51,7 +51,7 @@ export interface Json2htmlOptions {
     /**
      * format of the rendered structure:
      * * `inline`: all on one line without space
-     * * `multiline`: structure sur plusieur lignes avec indentation possible
+     * * `multiline`: structure on several lines with possible indentation
      */
     formatting?: 'inline' | 'multiline';
     /** type d'indentation `space` or `tab` */
