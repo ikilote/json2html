@@ -13,7 +13,12 @@
 <main>
   <fieldset class="json">
     <legend>json</legend>
-    <textarea (change)="format($event.target.value)">{{ mode === 'json' ? (data | json) : (data | js: 2) }}</textarea>
+    <mg-input>
+      <mg-input-textarea
+        [value]="mode === 'json' ? (data | json) : (data | js: 2)"
+        (update)="format($event)"
+      ></mg-input-textarea>
+    </mg-input>
   </fieldset>
 
   <fieldset class="options">
