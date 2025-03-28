@@ -20,7 +20,10 @@ Note for Angular:
 - **Json2HTML**: json or js object →
     - HTML
     - XML
-    - Angular template string
+    - Angular template string (with `@`)
+    - Comment
+    - Doctype
+    - etc.
 - **Json2Js**: json →
     - js object string
 

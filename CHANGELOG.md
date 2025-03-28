@@ -1,13 +1,19 @@
 # Changelog of json2html
 
+## V0.9.0 (2025-03-28)
+
+- Add `Json2CommentRef`, `Json2CdataRef`, `Json2DoctypeRef`, `Json2XmlRef`, `Json2EmptyLine` #2
+- Fix first level annotation
+- Demo with Magma
+
 ## V0.6.0 (2025-03-21)
 
-- Add Angular annotation support
+- Add Angular annotation support: `Json2annotationRef`, `Json2annotationValue`
 - Allows having the same arguments multiple times explicitly through an array
 
 ## V0.5.0 (2024-12-08)
 
-- Json2htmlAttr is missing state undefined
+- `Json2htmlAttr` is missing state `undefined`
 - Update demo to Angular 19
 
 ## V0.4.2 (2023-05-31)
