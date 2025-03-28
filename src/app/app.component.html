@@ -112,7 +112,7 @@
         </mg-input>
         <mg-input class="s-6">
           <mg-input-label>maxLength (0 = no wrap)</mg-input-label>
-          <mg-input-number min="1" max="500" forceMinMax [(ngModel)]="maxLength" (ngModelChange)="generated()" />
+          <mg-input-number min="0" max="500" forceMinMax [(ngModel)]="maxLength" (ngModelChange)="generated()" />
         </mg-input>
       }
 
