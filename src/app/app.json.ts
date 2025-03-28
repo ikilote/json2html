@@ -1,18 +1,28 @@
-import { Json2htmlObject } from "projects/json2html/src/public_api";
+import { Json2htmlObject } from 'projects/json2html/src/public_api';
 
-export const examples : Json2htmlObject[] = [
-    {
-        tag: 'div',
-        attrs: { id: 'test1', class: 'testclasse' },
-        body: [
-            'test',
-            {
-                tag: 'div',
-                attrs: { id: 'test2', class: 'foobar' },
-                body: 'test',
-            },
-        ],
-    },
+export const examples: Json2htmlObject[] = [
+    [
+        {
+            doctype: 'html',
+        },
+        {
+            tag: 'body',
+            body: [
+                {
+                    tag: 'div',
+                    attrs: { id: 'test1', class: 'testclasse' },
+                    body: [
+                        'test',
+                        {
+                            tag: 'div',
+                            attrs: { id: 'test2', class: 'foobar' },
+                            body: ['test', { emptyLine: 2 }, { comment: 'comment example' }, { emptyLine: 2 }],
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
     [
         {
             tag: 'div',
@@ -96,11 +106,11 @@ export const examples : Json2htmlObject[] = [
             },
             {
                 annotation: 'let',
-                value: 'a = "2"'
+                value: 'a = "2"',
             },
             {
                 annotation: 'if',
-                conditional : 'a === "1"',
+                conditional: 'a === "1"',
                 body: {
                     tag: 'a',
                     attrs: { href: 'https://example.com' },
@@ -114,26 +124,26 @@ export const examples : Json2htmlObject[] = [
                     attrs: { href: 'https://test.com' },
                     body: 'lien',
                 },
-                attached : true
+                attached: true,
             },
             {
                 annotation: 'switch',
-                conditional : 'a',
+                conditional: 'a',
                 body: [
                     {
                         annotation: 'case',
-                        conditional : 'caseA',
-                        body: "Value A",
+                        conditional: 'caseA',
+                        body: 'Value A',
                     },
                     {
                         annotation: 'case',
-                        conditional : 'caseB',
-                        body: "Value B",
+                        conditional: 'caseB',
+                        body: 'Value B',
                     },
                     {
                         annotation: 'default',
-                        body: "Default",
-                    }
+                        body: 'Default',
+                    },
                 ],
             },
         ],

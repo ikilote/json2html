@@ -1,13 +1,25 @@
 main {
-    display: grid;
-    grid-template: 'a b c' / 30% 40% 30%;
+    display: flex;
+
+    & > * {
+        flex: 1;
+    }
 }
 
 mg-input {
     width: 100%;
+    max-width: 100%;
 }
 
-label {
+.options {
+    max-width: min-content;
+
+    > div {
+        width: 500px;
+    }
+}
+
+.opt label {
     display: block;
 
     & > span {

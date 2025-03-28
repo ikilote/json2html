@@ -1,13 +1,13 @@
 <h1>&#64;ikilote/json2html</h1>
 
 <div>
-  <div class="s-3">
+  <div>
     <div>Examples</div>
     <button type="button" (click)="updateExample(0)">Example 1</button>
     <button type="button" (click)="updateExample(1)">Example 2</button>
     <button type="button" (click)="updateExample(2)">Example Angular</button>
   </div>
-  <div class="s-3">
+  <div class="s-f">
     <div>Data format</div>
     <button type="button" (click)="modeEdit('json')">json</button>
     <button type="button" (click)="modeEdit('js')">js</button>
@@ -16,7 +16,7 @@
 
 <main>
   <fieldset class="json">
-    <legend>json</legend>
+    <legend>JSON</legend>
     <mg-input>
       <mg-input-textarea
         minHeight="600px"
@@ -29,7 +29,7 @@
   </fieldset>
 
   <fieldset class="options">
-    <legend>options</legend>
+    <legend>Options</legend>
     <div>
       <mg-input class="s-12">
         <mg-input-label>formatting</mg-input-label>
@@ -141,12 +141,12 @@
       </mg-input>
 
       @if (type === 'html') {
-        <mg-input class="s-4">
+        <mg-input class="s-12">
           <mg-input-label>removeOptionalEndTags</mg-input-label>
           <mg-input-checkbox [(ngModel)]="removeOptionalEndTags" (ngModelChange)="generated()" mode="toggle" />
         </mg-input>
 
-        <mg-input class="s-8">
+        <mg-input class="s-12">
           <mg-input-label>optionalEndTags</mg-input-label>
           <mg-input-text [(ngModel)]="optionalEndTags" (ngModelChange)="generated()" />
         </mg-input>
@@ -155,7 +155,7 @@
   </fieldset>
 
   <fieldset class="rendu">
-    <legend>Rendu</legend>
+    <legend>Render</legend>
 
     <mg-input>
       <mg-input-textarea minHeight="600px" maxHeight="600px" monospace [value]="html"></mg-input-textarea>
