@@ -1,25 +1,9 @@
 main {
     display: grid;
-    grid-template: 'a b c' / 2fr 2fr 2fr;
+    grid-template: 'a b c' / 30% 40% 30%;
 }
 
-form {
-    flex: 3;
-}
-
-aside {
-    flex: 2;
-    padding: 0 15px;
-}
-
-textarea {
-    width: 100%;
-    min-height: 600px;
-    resize: vertical;
-}
-
-input:not([type='checkbox']):not([type='radio']),
-select {
+mg-input {
     width: 100%;
 }
 

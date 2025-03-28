@@ -1,13 +1,17 @@
 <h1>&#64;ikilote/json2html</h1>
 
 <div>
-  <button type="button" (click)="updateExample(0)">Example 1</button>
-  <button type="button" (click)="updateExample(1)">Example 2</button>
-  <button type="button" (click)="updateExample(2)">Example Angular</button>
-</div>
-<div>
-  <button type="button" (click)="modeEdit('json')">json</button>
-  <button type="button" (click)="modeEdit('js')">js</button>
+  <div class="s-3">
+    <div>Examples</div>
+    <button type="button" (click)="updateExample(0)">Example 1</button>
+    <button type="button" (click)="updateExample(1)">Example 2</button>
+    <button type="button" (click)="updateExample(2)">Example Angular</button>
+  </div>
+  <div class="s-3">
+    <div>Data format</div>
+    <button type="button" (click)="modeEdit('json')">json</button>
+    <button type="button" (click)="modeEdit('js')">js</button>
+  </div>
 </div>
 
 <main>
@@ -15,6 +19,9 @@
     <legend>json</legend>
     <mg-input>
       <mg-input-textarea
+        minHeight="600px"
+        maxHeight="600px"
+        monospace
         [value]="mode === 'json' ? (data | json) : (data | js: 2)"
         (update)="format($event)"
       ></mg-input-textarea>
@@ -24,93 +31,135 @@
   <fieldset class="options">
     <legend>options</legend>
     <div>
-      <label>
-        <span>formatting</span>
-        <select [value]="formatting" (change)="formatting = $event.target.value; generated()">
-          <option value="multiline">multiline (defaut): structure on several lines with possible indentation</option>
-          <option value="inline">inline: all on one line without space</option>
-        </select>
-      </label>
-      <label *ngIf="formatting === 'multiline'">
-        <span>indent</span>
-        <input type="checkbox" [checked]="indent" (change)="indent = $event.target.checked; generated()" />
-      </label>
-      <label *ngIf="indent && formatting === 'multiline'">
-        <span>spaceType</span>
-        <select [value]="spaceType" (change)="spaceType = $event.target.value; generated()">
-          <option value="space">space (defaut)</option>
-          <option value="tab">tab</option>
-        </select>
-      </label>
-      <label *ngIf="indent && formatting === 'multiline'">
-        <span>spaceLength</span>
-        <input [value]="spaceLength" type="number" min="0" (change)="spaceLength = $event.target.value; generated()" />
-      </label>
-      <label *ngIf="indent && formatting === 'multiline'">
-        <span>spaceBase</span>
-        <input [value]="spaceBase" type="number" min="0" (change)="spaceBase = $event.target.value; generated()" />
-      </label>
-      <label *ngIf="formatting === 'multiline'">
-        <span>attrPosition</span>
-        <select [value]="attrPosition" (change)="attrPosition = $event.target.value; generated()">
-          <option value="inline">inline: no alignment</option>
-          <option value="inline space">inline space: wrap with alignment with higher level</option>
-          <option value="inline alignTag">inline alignTag: wrap with alignment with the tag</option>
-          <option value="inline alignFirstAttr">inline alignFirstAttr: wrap alignment with the first attribute</option>
-          <option *ngIf="indent" value="space">space: alignment with higher level</option>
-          <option *ngIf="indent" value="alignTag">alignTag: alignment with the tag</option>
-          <option *ngIf="indent" value="alignFirstAttr">
-            alignFirstAttr (default): alignment with the first attribute
-          </option>
-          <option *ngIf="indent" value="prettier">prettier: like Prettier formatter</option>
-        </select>
-      </label>
-      <label *ngIf="indent && formatting === 'multiline'">
-        <span>wrapAttrNumber</span>
-        <input
-          [value]="wrapAttrNumber"
-          type="number"
-          min="0"
-          (change)="wrapAttrNumber = $event.target.value; generated()"
+      <mg-input class="s-12">
+        <mg-input-label>formatting</mg-input-label>
+        <mg-input-select
+          [(ngModel)]="formatting"
+          (ngModelChange)="generated()"
+          [data]="[
+            { value: 'multiline', label: 'multiline (defaut): structure on several lines with possible indentation' },
+            { value: 'inline', label: 'inline: all on one line without space' },
+          ]"
         />
-      </label>
-      <label *ngIf="formatting === 'multiline'">
-        <span>maxLength (0 = no wrap)</span>
-        <input [value]="maxLength" type="number" min="0" (change)="maxLength = $event.target.value; generated()" />
-      </label>
-      <label>
-        <span>type</span>
-        <select [value]="type" (change)="type = $event.target.value; generated()">
-          <option value="html">html (default)</option>
-          <option value="xml">xml</option>
-        </select>
-      </label>
-      <label>
-        <span>xmlDefaultTag</span>
-        <input type="text" [value]="xmlDefaultTag" (change)="xmlDefaultTag = $event.target.value; generated()" />
-      </label>
-      <label>
-        <span>noContentTags</span>
-        <input type="text" [value]="noContentTags" (change)="noContentTags = $event.target.value; generated()" />
-      </label>
-      <label *ngIf="type === 'html'">
-        <span>removeOptionalEndTags</span>
-        <input
-          type="checkbox"
-          [checked]="removeOptionalEndTags"
-          (change)="removeOptionalEndTags = $event.target.checked; generated()"
+      </mg-input>
+      @if (formatting === 'multiline') {
+        <mg-input class="s-12">
+          <mg-input-label>indent</mg-input-label>
+          <mg-input-checkbox [(ngModel)]="indent" (ngModelChange)="generated()" mode="toggle" />
+        </mg-input>
+      }
+      @if (indent && formatting === 'multiline') {
+        <mg-input class="s-12">
+          <mg-input-label>spaceType</mg-input-label>
+          <mg-input-select
+            [(ngModel)]="spaceType"
+            (ngModelChange)="generated()"
+            [data]="[
+              { value: 'space', label: 'space (defaut)' },
+              { value: 'tab', label: 'tab' },
+            ]"
+          />
+        </mg-input>
+
+        <mg-input class="s-6">
+          <mg-input-label>spaceLength</mg-input-label>
+          <mg-input-number min="0" max="50" forceMinMax [(ngModel)]="spaceLength" (ngModelChange)="generated()" />
+        </mg-input>
+
+        <mg-input class="s-6">
+          <mg-input-label>spaceBase</mg-input-label>
+          <mg-input-number min="0" max="50" forceMinMax [(ngModel)]="spaceBase" (ngModelChange)="generated()" />
+        </mg-input>
+      }
+      @if (formatting === 'multiline') {
+        <mg-input class="s-12">
+          <mg-input-label>attrPosition</mg-input-label>
+          <mg-input-select
+            [(ngModel)]="attrPosition"
+            (ngModelChange)="generated()"
+            [data]="
+              indent
+                ? [
+                    { value: 'inline', label: 'inline: no alignment' },
+                    { value: 'inline space', label: 'inline space: wrap with alignment with higher level' },
+                    { value: 'inline alignTag', label: 'inline alignTag: wrap with alignment with the tag' },
+                    {
+                      value: 'inline alignFirstAttr',
+                      label: 'inline alignFirstAttr: wrap alignment with the first attribute',
+                    },
+                    { value: 'space', label: 'space: alignment with higher level' },
+                    { value: 'alignTag', label: 'alignTag: alignment with the tag' },
+                    { value: 'alignFirstAttr', label: 'alignFirstAttr (default): alignment with the first attribute' },
+                    { value: 'prettier', label: 'prettier: like Prettier formatter' },
+                  ]
+                : [
+                    { value: 'inline', label: 'inline: no alignment' },
+                    { value: 'inline space', label: 'inline space: wrap with alignment with higher level' },
+                    { value: 'inline alignTag', label: 'inline alignTag: wrap with alignment with the tag' },
+                    {
+                      value: 'inline alignFirstAttr',
+                      label: 'inline alignFirstAttr: wrap alignment with the first attribute',
+                    },
+                  ]
+            "
+          />
+        </mg-input>
+      }
+      @if (indent && formatting === 'multiline') {
+        <mg-input class="s-6">
+          <mg-input-label>wrapAttrNumber</mg-input-label>
+          <mg-input-number min="0" max="50" forceMinMax [(ngModel)]="wrapAttrNumber" (ngModelChange)="generated()" />
+        </mg-input>
+        <mg-input class="s-6">
+          <mg-input-label>maxLength (0 = no wrap)</mg-input-label>
+          <mg-input-number min="1" max="500" forceMinMax [(ngModel)]="maxLength" (ngModelChange)="generated()" />
+        </mg-input>
+      }
+
+      <mg-input class="s-6">
+        <mg-input-label>type</mg-input-label>
+        <mg-input-select
+          [(ngModel)]="type"
+          (ngModelChange)="generated()"
+          [data]="[
+            { value: 'html', label: 'html (default)' },
+            { value: 'xml', label: 'xml' },
+          ]"
         />
-      </label>
-      <label *ngIf="type === 'html'">
-        <span>optionalEndTags</span>
-        <input type="text" [value]="optionalEndTags" (change)="optionalEndTags = $event.target.value; generated()" />
-      </label>
+      </mg-input>
+
+      @if (type === 'xml') {
+        <mg-input class="s-6">
+          <mg-input-label>xmlDefaultTag</mg-input-label>
+          <mg-input-text [(ngModel)]="xmlDefaultTag" (ngModelChange)="generated()" />
+        </mg-input>
+      }
+
+      <mg-input class="s-12">
+        <mg-input-label>noContentTags</mg-input-label>
+        <mg-input-text [(ngModel)]="noContentTags" (ngModelChange)="generated()" />
+      </mg-input>
+
+      @if (type === 'html') {
+        <mg-input class="s-4">
+          <mg-input-label>removeOptionalEndTags</mg-input-label>
+          <mg-input-checkbox [(ngModel)]="removeOptionalEndTags" (ngModelChange)="generated()" mode="toggle" />
+        </mg-input>
+
+        <mg-input class="s-8">
+          <mg-input-label>optionalEndTags</mg-input-label>
+          <mg-input-text [(ngModel)]="optionalEndTags" (ngModelChange)="generated()" />
+        </mg-input>
+      }
     </div>
   </fieldset>
 
   <fieldset class="rendu">
     <legend>Rendu</legend>
-    <textarea>{{ html }}</textarea>
+
+    <mg-input>
+      <mg-input-textarea minHeight="600px" maxHeight="600px" monospace [value]="html"></mg-input-textarea>
+    </mg-input>
   </fieldset>
 </main>
 

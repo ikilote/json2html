@@ -21,6 +21,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^19.2.4",
+    "@angular/cdk": "^19.2.7",
     "@angular/common": "^19.2.4",
     "@angular/compiler": "^19.2.4",
     "@angular/core": "^19.2.4",
@@ -28,12 +29,11 @@
     "@angular/platform-browser": "^19.2.4",
     "@angular/platform-browser-dynamic": "^19.2.4",
     "@angular/router": "^19.2.4",
-    "@angular/cdk": "^19.2.7",
     "@ikilote/magma": "^0.4.2",
     "colorjs.io": "^0.5.2",
-    "ng-select2-component": "^17.2.1",
     "core-js": "^2.5.4",
-    "rxjs": "~6.6.2",
+    "ng-select2-component": "^17.2.1",
+    "rxjs": "^7.8.2",
     "tslib": "^2.0.0",
     "zone.js": "~0.15.0"
   },
