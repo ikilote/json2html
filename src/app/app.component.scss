@@ -11,6 +11,11 @@ mg-input {
     max-width: 100%;
 }
 
+mg-input-error pre {
+    font-size: initial;
+    font-family: var(--font-mono);
+}
+
 .options {
     max-width: min-content;
 

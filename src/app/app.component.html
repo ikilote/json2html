@@ -16,15 +16,21 @@
 
 <main>
   <fieldset class="json">
-    <legend>JSON</legend>
+    <legend>{{ mode | uppercase }}</legend>
     <mg-input>
       <mg-input-textarea
         minHeight="600px"
         maxHeight="600px"
         monospace
-        [value]="mode === 'json' ? (data | json) : (data | js: 2)"
-        (update)="format($event)"
+        [ngModel]="mode === 'json' ? (data | json) : (data | js: 2)"
+        (ngModelChange)="format($event)"
       ></mg-input-textarea>
+      @if (error) {
+        <mg-input-error>
+          <div>Error:</div>
+          <pre>{{ error }}</pre>
+        </mg-input-error>
+      }
     </mg-input>
   </fieldset>
 
@@ -158,7 +164,7 @@
     <legend>Render</legend>
 
     <mg-input>
-      <mg-input-textarea minHeight="600px" maxHeight="600px" monospace [value]="html"></mg-input-textarea>
+      <mg-input-textarea minHeight="600px" maxHeight="600px" monospace [value]="html" readonly></mg-input-textarea>
     </mg-input>
   </fieldset>
 </main>

@@ -10,7 +10,7 @@ export const examples: Json2htmlObject[] = [
             body: [
                 {
                     tag: 'div',
-                    attrs: { id: 'test1', class: 'testclasse' },
+                    attrs: { id: 'test1', class: 'test-class' },
                     body: [
                         'test',
                         {
@@ -26,7 +26,7 @@ export const examples: Json2htmlObject[] = [
     [
         {
             tag: 'div',
-            attrs: { id: 'test', class: 'testclasse', test: null },
+            attrs: { id: 'test', class: 'test-class', test: null },
             body: [
                 'test',
                 {

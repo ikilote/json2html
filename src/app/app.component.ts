@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { jsonParse } from '@ikilote/magma';
+
 import { Json2html, Json2htmlObject, Json2htmlOptions } from 'projects/json2html/src/public_api';
 
 import { examples } from './app.json';
@@ -65,11 +67,15 @@ export class AppComponent {
     html: string;
 
     mode: 'json' | 'js' = 'json';
+
+    error = '';
+
     constructor() {
         this.updateExample(1);
     }
 
     updateExample(number: number) {
+        this.error = '';
         this.data = examples[number];
         this.generated();
     }
@@ -79,15 +85,19 @@ export class AppComponent {
     }
 
     format(data: string) {
+        this.error = '';
         try {
             if (this.mode === 'json') {
-                this.data = JSON.parse(data);
+                this.data = jsonParse(data);
             } else {
                 this.data = (0, eval)(data.replace('\n', ''));
             }
             this.generated();
         } catch (error) {
             console.error(error);
+            if (error.cause) {
+                this.error = error.cause;
+            }
         }
     }
 
