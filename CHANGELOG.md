@@ -26,7 +26,7 @@
 
 ## V0.4.0 (2023-02-18)
 
-- add `Json2Js` to tranform json to js style
+- add `Json2Js` to transform json to js style
 
 ## V0.3.0 (2023-02-17)
 

@@ -19,8 +19,8 @@
     <legend>{{ mode | uppercase }}</legend>
     <mg-input>
       <mg-input-textarea
-        minHeight="600px"
-        maxHeight="600px"
+        minHeight="700px"
+        maxHeight="700px"
         monospace
         [ngModel]="mode === 'json' ? (data | json) : (data | js: 2)"
         (ngModelChange)="format($event)"
@@ -123,6 +123,16 @@
       }
 
       <mg-input class="s-6">
+        <mg-input-label>spaceBeforeSlash</mg-input-label>
+        <mg-input-checkbox [(ngModel)]="spaceBeforeSlash" (ngModelChange)="generated()" mode="toggle" />
+      </mg-input>
+
+      <mg-input class="s-6">
+        <mg-input-label>webComponentAutoClose</mg-input-label>
+        <mg-input-checkbox [(ngModel)]="webComponentAutoClose" (ngModelChange)="generated()" mode="toggle" />
+      </mg-input>
+
+      <mg-input class="s-6">
         <mg-input-label>type</mg-input-label>
         <mg-input-select
           [(ngModel)]="type"
@@ -164,7 +174,7 @@
     <legend>Render</legend>
 
     <mg-input>
-      <mg-input-textarea minHeight="600px" maxHeight="600px" monospace [value]="html" readonly></mg-input-textarea>
+      <mg-input-textarea minHeight="700px" maxHeight="700px" monospace [value]="html" readonly></mg-input-textarea>
     </mg-input>
   </fieldset>
 </main>

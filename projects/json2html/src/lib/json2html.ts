@@ -41,10 +41,13 @@ export interface Json2htmlRef {
     attrs?: Json2htmlAttr;
     /** content of tag */
     body?: Json2htmlBody;
-    /** inline : override formatting option for this element and these children */
+    /** override formatting option for this element and these children */
     inline?: boolean;
-    /** autoclose: ignore body and end tag */
-    autoclose?: boolean;
+    /** ignore body and end tag for standard tag (see : optionalEndTags) */
+    autoClose?: boolean;
+    /** only for web component: if no body → no end tag (web component:tag with a `-` in their name).\
+     * Note: override global option with same name, only for this tag */
+    webComponentAutoClose?: boolean;
 }
 
 export interface Json2annotationRef {
@@ -141,6 +144,10 @@ export interface Json2htmlOptions {
     removeOptionalEndTags?: boolean;
     /** list of HTML tags with options end tag */
     optionalEndTags?: string[];
+    /** add a space before `/` (ex. true = `<br />`, false = `<br/>`)*/
+    spaceBeforeSlash?: boolean;
+    /** only for web component: if no body → no end tag (web component:tag with a `-` in their name) */
+    webComponentAutoClose?: boolean;
 }
 
 export class Json2html {
@@ -174,6 +181,7 @@ export class Json2html {
             'wbr',
         ],
         removeOptionalEndTags: false,
+        spaceBeforeSlash: true,
         optionalEndTags: [
             'colgroup',
             'dd',
@@ -303,9 +311,20 @@ export class Json2html {
      */
     private _generateTag(lvl: number, json: Json2htmlRef, inline: boolean = false): string {
         const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
-        const xmlAutoClose = (!hasContent || json.autoclose) && this._modeXML() ? '/' : '';
-        let string = `<${json.tag}${this._generateAttrs(lvl, json, inline || json.inline)}${xmlAutoClose}>`;
-        if (hasContent && !json.autoclose) {
+        const hasWebComponentBody =
+            !json.body &&
+            ((this.options.webComponentAutoClose && json.webComponentAutoClose === undefined) ||
+                json.webComponentAutoClose) &&
+            json.tag.includes('-');
+        const content = this._generateAttrs(lvl, json, inline || json.inline);
+
+        const xmlAutoClose =
+            ((!hasContent || json.autoClose) && this._modeXML()) || hasWebComponentBody
+                ? `${this.options.spaceBeforeSlash && !content[content.length - 1].match(/\s|\n/) ? ' ' : ''}/`
+                : '';
+
+        let string = `<${json.tag}${content}${xmlAutoClose}>`;
+        if (hasContent && !json.autoClose && !hasWebComponentBody) {
             let tagContent = this._generateBody(lvl, json, inline || json.inline);
             if (tagContent && this._hasMultiline() && !(inline || json.inline)) {
                 tagContent = `${tagContent}\n${this._getSpacing(lvl)}`;

@@ -74,10 +74,25 @@ export const examples: Json2htmlObject[] = [
             body: ['test2'],
         },
         {
-            tag: 'test-autoclose',
+            tag: 'test-auto-close',
             attrs: { id: 'attr-2', class: 'bar' },
             body: ['test2'],
-            autoclose: true,
+            autoClose: true,
+        },
+        {
+            tag: 'test-auto-close-web',
+            attrs: { id: 'attr-2', class: 'bar' },
+            body: ['test2'],
+            webComponentAutoClose: true,
+        },
+        {
+            tag: 'test-auto-close-web-empty',
+            attrs: { id: 'attr-2', class: 'bar' },
+            webComponentAutoClose: true,
+        },
+        {
+            tag: 'web-empty',
+            attrs: { id: 'attr-2', class: 'bar' },
         },
         {
             tag: 'datalist',

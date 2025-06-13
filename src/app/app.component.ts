@@ -43,6 +43,8 @@ export class AppComponent {
         'wbr',
     ].toString();
     removeOptionalEndTags = false;
+    spaceBeforeSlash = true;
+    webComponentAutoClose = false;
     optionalEndTags = [
         'colgroup',
         'dd',
@@ -113,6 +115,8 @@ export class AppComponent {
             xmlDefaultTag: this.xmlDefaultTag,
             wrapAttrNumber: this.wrapAttrNumber,
             maxLength: this.maxLength,
+            spaceBeforeSlash: this.spaceBeforeSlash,
+            webComponentAutoClose: this.webComponentAutoClose,
             noContentTags: this.noContentTags.split(','),
             removeOptionalEndTags: this.removeOptionalEndTags,
             optionalEndTags: this.optionalEndTags.split(','),
