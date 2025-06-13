@@ -1,5 +1,11 @@
 # Changelog of json2html
 
+## V0.9.1 (2025-03-28)
+
+- Add global options `spaceBeforeSlash`, `webComponentAutoClose` #3
+- Add tag option `webComponentAutoClose` #3
+- Update demo to Angular 20
+
 ## V0.9.0 (2025-03-28)
 
 - Add `Json2CommentRef`, `Json2CdataRef`, `Json2DoctypeRef`, `Json2XmlRef`, `Json2EmptyLine` #2
