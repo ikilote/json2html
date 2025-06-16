@@ -1,5 +1,9 @@
 # Changelog of json2html
 
+## V0.9.3 (2025-06-16)
+
+- Fix when body is an empty string
+
 ## V0.9.2 (2025-06-16)
 
 - Fix auto-close with empty list in body
