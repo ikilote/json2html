@@ -1,5 +1,9 @@
 # Changelog of json2html
 
+## V0.9.4 (2025-06-16)
+
+- Fix when body is an empty content
+
 ## V0.9.3 (2025-06-16)
 
 - Fix when body is an empty string
