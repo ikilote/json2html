@@ -101,6 +101,9 @@ export const examples: Json2htmlObject[] = [
             attrs: { id: 'attr-2', class: 'bar' },
         },
         {
+            tag: 'web-empty-2',
+        },
+        {
             tag: 'datalist',
             attrs: { id: 'id-datalist' },
             body: [

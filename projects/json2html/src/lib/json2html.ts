@@ -321,7 +321,7 @@ export class Json2html {
         const xmlAutoClose =
             ((!hasContent || json.autoClose) && this._modeXML()) || hasWebComponentBody
                 ? `${
-                      this.options.spaceBeforeSlash && (content || !content[content.length - 1].match(/\s|\n/))
+                      this.options.spaceBeforeSlash && (!content || !content[content.length - 1].match(/\s|\n/))
                           ? ' '
                           : ''
                   }/`
