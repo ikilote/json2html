@@ -1,6 +1,10 @@
 # Changelog of json2html
 
-## V0.9.1 (2025-03-28)
+## V0.9.2 (2025-06-16)
+
+- Fix auto-close with empty list in body
+
+## V0.9.1 (2025-06-13)
 
 - Add global options `spaceBeforeSlash`, `webComponentAutoClose` #3
 - Add tag option `webComponentAutoClose` #3
