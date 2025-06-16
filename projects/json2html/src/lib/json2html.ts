@@ -312,7 +312,7 @@ export class Json2html {
     private _generateTag(lvl: number, json: Json2htmlRef, inline: boolean = false): string {
         const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
         const hasWebComponentBody =
-            !json.body &&
+            (!json.body || !(json.body as []).length) &&
             ((this.options.webComponentAutoClose && json.webComponentAutoClose === undefined) ||
                 json.webComponentAutoClose) &&
             json.tag.includes('-');

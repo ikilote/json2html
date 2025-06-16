@@ -91,6 +91,12 @@ export const examples: Json2htmlObject[] = [
             webComponentAutoClose: true,
         },
         {
+            tag: 'test-auto-close-web-empty-2',
+            attrs: { id: 'attr-2', class: 'bar' },
+            body: [],
+            webComponentAutoClose: true,
+        },
+        {
             tag: 'web-empty',
             attrs: { id: 'attr-2', class: 'bar' },
         },
