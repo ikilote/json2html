@@ -1,5 +1,10 @@
 # Changelog of json2html
 
+## V0.10.0 (2025-06-19)
+
+- BREAKING : rename `webComponentAutoClose` to `webComponentSelfClosing`
+- Added ability to globally override default options #4
+
 ## V0.9.4 (2025-06-16)
 
 - Fix when body is an empty content
