@@ -151,7 +151,7 @@ export interface Json2htmlOptions {
 }
 
 export class Json2html {
-    readonly options: Json2htmlOptions = {
+    static default: Json2htmlOptions = {
         spaceType: 'space',
         spaceLength: 4,
         spaceBase: 0,
@@ -202,6 +202,8 @@ export class Json2html {
             'tr',
         ],
     };
+
+    private readonly options = { ...Json2html.default };
 
     /**
      * @param json one ou list of node data
