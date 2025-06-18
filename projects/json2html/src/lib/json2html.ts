@@ -46,8 +46,9 @@ export interface Json2htmlRef {
     /** ignore body and end tag for standard tag (see : optionalEndTags) */
     autoClose?: boolean;
     /** only for web component: if no body → no end tag (web component:tag with a `-` in their name).\
-     * Note: override global option with same name, only for this tag */
-    webComponentAutoClose?: boolean;
+     * Note: override global option with same name, only for this tag
+     * @example `<test-cmp></test-cmp>` → `<test-cmp />` */
+    webComponentSelfClosing?: boolean;
 }
 
 export interface Json2annotationRef {
@@ -146,8 +147,10 @@ export interface Json2htmlOptions {
     optionalEndTags?: string[];
     /** add a space before `/` (ex. true = `<br />`, false = `<br/>`)*/
     spaceBeforeSlash?: boolean;
-    /** only for web component: if no body → no end tag (web component:tag with a `-` in their name) */
-    webComponentAutoClose?: boolean;
+    /** only for web component: if no body → no end tag (web component:tag with a `-` in their name)
+     * @example `<test-cmp></test-cmp>` → `<test-cmp />`
+     */
+    webComponentSelfClosing?: boolean;
 }
 
 export class Json2html {
@@ -315,8 +318,8 @@ export class Json2html {
         const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
         const hasWebComponentBody =
             (!json.body || !(json.body as []).length) &&
-            ((this.options.webComponentAutoClose && json.webComponentAutoClose === undefined) ||
-                json.webComponentAutoClose) &&
+            ((this.options.webComponentSelfClosing && json.webComponentSelfClosing === undefined) ||
+                json.webComponentSelfClosing) &&
             json.tag.includes('-');
         const content = this._generateAttrs(lvl, json, inline || json.inline);
 
