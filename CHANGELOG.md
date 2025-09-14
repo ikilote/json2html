@@ -1,5 +1,9 @@
 # Changelog of json2html
 
+## V0.10.1 (2025-09-14)
+
+- Fix `webComponentSelfClosing` when only one node
+
 ## V0.10.0 (2025-06-19)
 
 - BREAKING : rename `webComponentAutoClose` to `webComponentSelfClosing`
