@@ -317,7 +317,7 @@ export class Json2html {
     private _generateTag(lvl: number, json: Json2htmlRef, inline: boolean = false): string {
         const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
         const hasWebComponentBody =
-            (!json.body || !(json.body as []).length) &&
+            !this.hasContent(json) &&
             ((this.options.webComponentSelfClosing && json.webComponentSelfClosing === undefined) ||
                 json.webComponentSelfClosing) &&
             json.tag.includes('-');
@@ -348,6 +348,22 @@ export class Json2html {
             }
         }
         return string;
+    }
+
+    /**
+     * test is node contents data
+     * @param json node data
+     * @returns has content
+     */
+    private hasContent(json: Json2htmlRef) {
+        if (json.body) {
+            if (Array.isArray(json.body)) {
+                return json.body.length > 0;
+            } else if (typeof json.body === 'object') {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

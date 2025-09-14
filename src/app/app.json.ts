@@ -104,6 +104,13 @@ export const examples: Json2htmlObject[] = [
             tag: 'web-empty-2',
         },
         {
+            tag: 'web-component',
+            body: {
+                tag: 'p',
+                body: 'only one ',
+            },
+        },
+        {
             tag: 'datalist',
             attrs: { id: 'id-datalist' },
             body: [
