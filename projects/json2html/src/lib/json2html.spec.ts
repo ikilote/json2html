@@ -44,6 +44,12 @@ describe('Json2html', () => {
             expect(html).toBe(`<img src="image.png" alt="Image" />`);
         });
 
+        it('should render a self-closing tag inline option (body)', () => {
+            const json = { tag: 'img', attrs: { src: 'image.png' }, body: 'body' };
+            const html = new Json2html(json, { formatting: 'inline' }).toString();
+            expect(html).toBe(`<img src="image.png">`);
+        });
+
         it('should handle null/undefined attributes', () => {
             const json = { tag: 'div', attrs: { class: null, id: undefined, role: 'main' } };
             const html = new Json2html(json).toString();
@@ -91,6 +97,17 @@ describe('Json2html', () => {
 </div>`);
         });
 
+        it('should use custom indentation', () => {
+            const json = { tag: 'div', body: ['Hello', { tag: 'div', body: 'World' }] };
+            const html = new Json2html(json, { spaceLength: 2 }).toString();
+            expect(html).toBe(`<div>
+  Hello
+  <div>
+    World
+  </div>
+</div>`);
+        });
+
         it('should render a self-closing tag inline option', () => {
             const json = { tag: 'img', attrs: { src: 'image.png', alt: 'Image' } };
             const html = new Json2html(json, { formatting: 'inline' }).toString();
@@ -135,6 +152,77 @@ describe('Json2html', () => {
             const html = new Json2html(json).toString();
             expect(html).toBe(`<!doctype html>
 <!-- This is a comment -->`);
+        });
+
+        it('should render comments', () => {
+            const json = [{ comment: 'This is a comment' }, { emptyLine: 2 }, { comment: 'This is a comment' }];
+            const html = new Json2html(json).toString();
+            expect(html).toBe(`<!-- This is a comment -->
+
+
+<!-- This is a comment -->`);
+        });
+    });
+
+    describe('Multi level', () => {
+        it('should render a simple tag', () => {
+            const json = { tag: 'div', body: { tag: 'p', body: 'Hello World' } };
+            const html = new Json2html(json).toString();
+            expect(html).toBe(`<div>
+    <p>
+        Hello World
+    </p>
+</div>`);
+        });
+
+        it('should render a simple tag', () => {
+            const json = {
+                tag: 'div',
+                body: {
+                    tag: 'div',
+                    body: { tag: 'div', body: { tag: 'div', body: { tag: 'p', body: 'Hello World' } } },
+                },
+            };
+            const html = new Json2html(json).toString();
+            expect(html).toBe(`<div>
+    <div>
+        <div>
+            <div>
+                <p>
+                    Hello World
+                </p>
+            </div>
+        </div>
+    </div>
+</div>`);
+        });
+
+        it('should render a with comments and empty lines', () => {
+            const json = {
+                tag: 'div',
+                body: [{ comment: 'This is a comment' }, { emptyLine: 2 }, { comment: 'This is a comment' }],
+            };
+            const html = new Json2html(json).toString();
+            expect(html).toBe(`<div>
+    <!-- This is a comment -->
+
+
+    <!-- This is a comment -->
+</div>`);
+        });
+
+        it('should render a with comments and empty lines', () => {
+            const json = {
+                tag: 'div',
+                body: [{ comment: 'This is a comment' }, { emptyLine: 2 }, { comment: 'This is a comment' }],
+            };
+            const html = new Json2html(json).toString();
+            expect(html).toBe(`<div>
+    <!-- This is a comment -->
+
+
+    <!-- This is a comment -->
+</div>`);
         });
     });
 });
