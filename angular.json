@@ -133,8 +133,8 @@
           "options": {
             "main": "projects/json2html/src/test.ts",
             "tsConfig": "projects/json2html/tsconfig.spec.json",
-            "karmaConfig": "projects/json2html/karma.conf.js",
-            "browsers": "ChromeHeadless"
+            "browsers": "ChromeHeadless",
+            "codeCoverage": true
           }
         }
       }
