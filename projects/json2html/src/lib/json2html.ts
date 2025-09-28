@@ -324,7 +324,7 @@ export class Json2html {
         const content = this._generateAttrs(lvl, json, inline || json.inline);
 
         const xmlAutoClose =
-            ((!hasContent || json.autoClose) && this._modeXML()) || hasWebComponentBody
+            ((!hasContent || json.autoClose) && this._modeXML()) || (!hasContent && hasWebComponentBody)
                 ? `${
                       this.options.spaceBeforeSlash && (!content || !content[content.length - 1].match(/\s|\n/))
                           ? ' '
@@ -333,7 +333,8 @@ export class Json2html {
                 : '';
 
         let string = `<${json.tag}${content}${xmlAutoClose}>`;
-        if (hasContent && !json.autoClose && !hasWebComponentBody) {
+
+        if (hasContent && (!json.autoClose || !hasWebComponentBody)) {
             let tagContent = this._generateBody(lvl, json, inline || json.inline);
             if (tagContent && this._hasMultiline() && !(inline || json.inline)) {
                 tagContent = `${tagContent}\n${this._getSpacing(lvl)}`;

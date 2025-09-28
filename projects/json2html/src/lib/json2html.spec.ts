@@ -224,5 +224,16 @@ describe('Json2html', () => {
     <!-- This is a comment -->
 </div>`);
         });
+
+        it('should render a with web-component tag with webComponentSelfClosing', () => {
+            const json = {
+                tag: 'test-test',
+                body: 'content',
+            };
+            const html = new Json2html(json, { webComponentSelfClosing: true }).toString();
+            expect(html).toBe(`<test-test>
+    content
+</test-test>`);
+        });
     });
 });
