@@ -1,5 +1,20 @@
 # Changelog of json2html
 
+## V1.0.0 (2025-11-30)
+
+- **Json2Html**
+    - Fix `webComponentSelfClosing` when string body
+    - Fix `webComponentSelfClosing` when no body
+    - Improve types for `Json2htmlObject`
+    - Add `hide` option for `emptyLine`
+- **Json2Js**
+    - add `tabAddedExceptFirst` option
+    - fix `tabAdded`
+
+**Tests**
+
+- 100% test coverage
+
 ## V0.10.1 (2025-09-14)
 
 - Fix `webComponentSelfClosing` when only one node

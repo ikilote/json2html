@@ -4,6 +4,8 @@ Generation of an HTML plain text from a Json structure with several setting opti
 
 [![npm version](https://badge.fury.io/js/@ikilote%2Fjson2html.svg)](https://badge.fury.io/js/@ikilote%2Fjson2html) [![Downloads](https://img.shields.io/npm/dm/@ikilote%2Fjson2html.svg)](https://www.npmjs.com/package/@ikilote%2Fjson2html) [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://git.ikilote.net/angular/json2html/raw/master/LICENSE)
 
+Example usage in **[Magma](https://magma.ikilote.net)** demo.
+
 ## Installation
 
 ```
@@ -24,7 +26,7 @@ Note for Angular:
     - Comment
     - Doctype
     - etc.
-- **Json2Js**: json →
+- **Json2Js**: json or js object →
     - js object string
 
 ## Demo
@@ -194,6 +196,12 @@ npm run publish:lib
 
 ```
 npm run build:demo
+```
+
+## run tests
+
+```
+npm run test:lib
 ```
 
 ## License
