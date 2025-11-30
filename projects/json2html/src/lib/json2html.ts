@@ -1,5 +1,21 @@
+export type Json2htmlAttrValues =
+    // normal content
+    | string
+    // normal content (one attribut by element)
+    | string[]
+    // number content
+    | number
+    // number content (one attribut by element)
+    | number[]
+    // boolean (show true / false)
+    | boolean
+    // short attribut
+    | null
+    // hide attribut
+    | undefined;
+
 export interface Json2htmlAttr {
-    [key: string]: string | string[] | number | number[] | null | undefined;
+    [key: string]: Json2htmlAttrValues;
 }
 
 export type Json2htmlObject =
@@ -315,40 +331,54 @@ export class Json2html {
      * @returns render of node
      */
     private _generateTag(lvl: number, json: Json2htmlRef, inline: boolean = false): string {
-        const hasContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
-        const hasWebComponentBody =
-            !this.hasContent(json) &&
-            ((this.options.webComponentSelfClosing && json.webComponentSelfClosing === undefined) ||
-                json.webComponentSelfClosing) &&
-            json.tag.includes('-');
-        const content = this._generateAttrs(lvl, json, inline || json.inline);
+        const tagWithContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
+        const content = this.hasContent(json);
+        const webComponentSelfClosing =
+            (this.options.webComponentSelfClosing && json.webComponentSelfClosing === undefined) ||
+            json.webComponentSelfClosing;
+        const hasWebComponentBody = !content && webComponentSelfClosing && json.tag.includes('-');
+        const contentAttr = this._generateAttrs(lvl, json, inline || json.inline);
 
         const xmlAutoClose =
-            ((!hasContent || json.autoClose) && this._modeXML()) || (!hasContent && hasWebComponentBody)
+            ((!tagWithContent || json.autoClose) && this._modeXML()) || hasWebComponentBody
                 ? `${
-                      this.options.spaceBeforeSlash && (!content || !content[content.length - 1].match(/\s|\n/))
+                      this.options.spaceBeforeSlash &&
+                      (!contentAttr || !contentAttr[contentAttr.length - 1].match(/\s|\n/))
                           ? ' '
                           : ''
                   }/`
                 : '';
 
-        let string = `<${json.tag}${content}${xmlAutoClose}>`;
+        let string = `<${json.tag}${contentAttr}${xmlAutoClose}>`;
 
-        if (hasContent && (!json.autoClose || !hasWebComponentBody)) {
+        if (tagWithContent && !json.autoClose && !hasWebComponentBody) {
             let tagContent = this._generateBody(lvl, json, inline || json.inline);
             if (tagContent && this._hasMultiline() && !(inline || json.inline)) {
-                tagContent = `${tagContent}\n${this._getSpacing(lvl)}`;
+                tagContent = `${tagContent}`;
+                if (this.hasEndTag(json)) {
+                    tagContent += `\n${this._getSpacing(lvl)}`;
+                }
             }
+
             string += tagContent;
-            if (
-                !this.options.removeOptionalEndTags ||
-                this._modeXML() ||
-                (this.options.removeOptionalEndTags && !this.options.optionalEndTags.includes(json.tag.toLowerCase()))
-            ) {
+            if (this.hasEndTag(json)) {
                 string += `</${json.tag}>`;
             }
         }
         return string;
+    }
+
+    /**
+     * test if end tag
+     * @param json node data
+     * @returns has end
+     */
+    private hasEndTag(json: Json2htmlRef) {
+        return (
+            !this.options.removeOptionalEndTags ||
+            this._modeXML() ||
+            (this.options.removeOptionalEndTags && !this.options.optionalEndTags.includes(json.tag.toLowerCase()))
+        );
     }
 
     /**
@@ -359,8 +389,12 @@ export class Json2html {
     private hasContent(json: Json2htmlRef) {
         if (json.body) {
             if (Array.isArray(json.body)) {
-                return json.body.length > 0;
-            } else if (typeof json.body === 'object') {
+                if (json.body.length > 1) {
+                    return true;
+                } else if (json.body.length === 1) {
+                    return !!json.body[0];
+                }
+            } else if (typeof json.body === 'object' || (typeof json.body === 'string' && json.body)) {
                 return true;
             }
         }
