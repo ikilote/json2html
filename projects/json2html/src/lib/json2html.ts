@@ -637,7 +637,7 @@ export class Json2html {
     }
 
     /**
-     * if multiline rendering
+     * if XML rendering
      */
     private _modeXML(): boolean {
         return this.options.type === 'xml';

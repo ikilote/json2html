@@ -971,5 +971,46 @@ describe('Json2html', () => {
 
             expect(html).toBe('');
         });
+
+        it('should handle direct EmptyLine has ignore with inline formatting option', () => {
+            const json = [{ emptyLine: 1 }];
+            const html = new Json2html(json, { formatting: 'inline' }).toString();
+
+            expect(html).toBe('');
+        });
+
+        it('should handle emptyLine on first line', () => {
+            const json = [{ emptyLine: 1 }, { tag: 'div' }];
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe('\n<div></div>');
+        });
+
+        it('should handle emptyLine on middle line', () => {
+            const json = [{ tag: 'div' }, { emptyLine: 1 }, { tag: 'div' }];
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe('<div></div>\n\n<div></div>');
+        });
+
+        it('should handle emptyLine on around item', () => {
+            const json = [{ emptyLine: 2 }, { comment: 'comment example' }, { emptyLine: 2 }];
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe('\n\n<!-- comment example -->\n\n');
+        });
+
+        it('should handle emptyLine on around item on second level', () => {
+            const json = { tag: 'div', body: [{ emptyLine: 2 }, { comment: 'comment example' }, { emptyLine: 2 }] };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe(`<div>
+
+
+    <!-- comment example -->
+
+
+</div>`);
+        });
     });
 });
