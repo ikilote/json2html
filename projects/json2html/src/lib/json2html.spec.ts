@@ -540,12 +540,169 @@ describe('Json2html', () => {
         it('should render attached annotations (If/Else)', () => {
             const json = [
                 { annotation: 'if', conditional: 'isAdmin', body: [{ tag: 'div', body: 'Admin' }] },
-
                 { annotation: 'else', body: [{ tag: 'div', body: 'User' }], attached: true },
             ];
             const html = new Json2html(json).toString();
 
-            expect(html).toContain('} @else {');
+            expect(html).toBe(`@if (isAdmin) {
+    <div>
+        Admin
+    </div>
+} @else {
+    <div>
+        User
+    </div>
+}`);
+        });
+
+        it('should render attached annotations (If/Elseif/Else)', () => {
+            const json = [
+                { annotation: 'if', conditional: 'isAdmin', body: [{ tag: 'div', body: 'Admin' }] },
+                {
+                    annotation: 'elseif',
+                    conditional: 'isMembre',
+                    body: [{ tag: 'div', body: 'Member' }],
+                    attached: true,
+                },
+                { annotation: 'else', body: [{ tag: 'div', body: 'User' }], attached: true },
+            ];
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe(`@if (isAdmin) {
+    <div>
+        Admin
+    </div>
+} @elseif (isMembre) {
+    <div>
+        Member
+    </div>
+} @else {
+    <div>
+        User
+    </div>
+}`);
+        });
+
+        it('should render attached annotations (Switch)', () => {
+            const json = {
+                annotation: 'switch',
+                conditional: 'a',
+                body: [
+                    {
+                        annotation: 'case',
+                        conditional: 'caseA',
+                        body: 'Value A',
+                    },
+                    {
+                        annotation: 'case',
+                        conditional: 'caseB',
+                        body: 'Value B',
+                    },
+                    {
+                        annotation: 'default',
+                        body: 'Default',
+                    },
+                ],
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe(`@switch (a) {
+    @case (caseA) {
+        Value A
+    }
+    @case (caseB) {
+        Value B
+    }
+    @default {
+        Default
+    }
+}`);
+        });
+
+        it('should render attached annotations (Switch)', () => {
+            const json = {
+                annotation: 'switch',
+                conditional: 'a',
+                body: [
+                    {
+                        annotation: 'case',
+                        conditional: 'caseA',
+                        body: 'Value A',
+                    },
+                    {
+                        annotation: 'case',
+                        conditional: 'caseB',
+                        body: 'Value B',
+                    },
+                    {
+                        annotation: 'default',
+                        body: 'Default',
+                    },
+                ],
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe(`@switch (a) {
+    @case (caseA) {
+        Value A
+    }
+    @case (caseB) {
+        Value B
+    }
+    @default {
+        Default
+    }
+}`);
+        });
+
+        it('should render attached annotations (mix contents)', () => {
+            const json = [
+                {
+                    tag: 'div',
+                    attrs: { id: 'test2', class: 'foobar', '(click)': ['action1()', 'action2()'] },
+                    body: 'test',
+                },
+                {
+                    annotation: 'let',
+                    value: 'a = "2"',
+                },
+                {
+                    annotation: 'if',
+                    conditional: 'a === "1"',
+                    body: {
+                        tag: 'a',
+                        attrs: { href: 'https://example.com' },
+                        body: 'lien',
+                    },
+                },
+                {
+                    annotation: 'else',
+                    body: {
+                        tag: 'a',
+                        attrs: { href: 'https://test.com' },
+                        body: 'lien',
+                    },
+                    attached: true,
+                },
+            ];
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe(`<div id="test2"
+     class="foobar"
+     (click)="action1()"
+     (click)="action2()">
+    test
+</div>
+@let a = "2";
+@if (a === "1") {
+    <a href="https://example.com">
+        lien
+    </a>
+} @else {
+    <a href="https://test.com">
+        lien
+    </a>
+}`);
         });
     });
 
@@ -554,7 +711,14 @@ describe('Json2html', () => {
             const json = { tag: 'div', body: { tag: 'span', body: 'Hi' } };
             const html = new Json2html(json, { spaceType: 'tab', spaceLength: 1 }).toString();
 
-            expect(html).toContain('\t<span>');
+            expect(html).toBe(`<div>\n\t<span>\n\t\tHi\n\t</span>\n</div>`);
+        });
+
+        it('should handle space length indentation', () => {
+            const json = { tag: 'div', body: { tag: 'span', body: 'Hi' } };
+            const html = new Json2html(json, { spaceLength: 1 }).toString();
+
+            expect(html).toBe(`<div>\n <span>\n  Hi\n </span>\n</div>`);
         });
 
         it('should disable indentation completely', () => {
