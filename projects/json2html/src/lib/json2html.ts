@@ -22,6 +22,9 @@ export type Json2htmlObject =
     | Json2htmlRef
     | Json2annotationRef
     | Json2annotationValue
+    | Json2CommentRef
+    | Json2CdataRef
+    | Json2EmptyLine
     | (
           | Json2htmlRef
           | Json2annotationRef
@@ -244,6 +247,8 @@ export class Json2html {
         if (!Array.isArray(this.json)) {
             if ('annotation' in this.json) {
                 html = `${this._getSpacing(0)}${this._generateAnnotation(0, this.json, inline)}`;
+            } else if ('cdata' in this.json || 'comment' in this.json || 'emptyLine' in this.json) {
+                html = `${this._getSpacing(0)}${this._generateBodyElement(0, this.json, inline)}`;
             } else {
                 html = `${this._getSpacing(0)}${this._generateTag(0, this.json, inline)}`;
             }
@@ -295,7 +300,7 @@ export class Json2html {
         } else {
             let string = `@${json.annotation}${'conditional' in json ? ` (${json.conditional})` : ``} \{`;
 
-            let tagContent = this._generateBody(lvl, json as Json2annotationRef, inline);
+            let tagContent = this._generateBody(lvl, json, inline);
             if (tagContent && this._hasMultiline() && !inline) {
                 tagContent = `${tagContent}\n${this._getSpacing(lvl)}`;
             }
@@ -501,7 +506,7 @@ export class Json2html {
     }
 
     /**
-     * tag body generation
+     * body generation content
      * @param lvl level node
      * @param json node data
      * @param inline force inline
@@ -509,17 +514,11 @@ export class Json2html {
      */
     private _generateBody(
         lvl: number,
-        json: Json2htmlRef | Json2annotationRef | Json2CommentRef | Json2CdataRef | Json2EmptyLine,
+        json: Json2htmlRef | Json2annotationRef | Json2annotationValue,
         inline: boolean,
     ) {
         let string = '';
-        if ('cdata' in json) {
-            return `${this._getSpacing(0)}<![CDATA[${json.cdata}]]>`;
-        } else if ('comment' in json) {
-            return `${this._getSpacing(0)}<!-- ${json.comment} -->`;
-        } else if ('emptyLine' in json) {
-            return `${this._getSpacing(0)}${this.emptyLines(json, inline)}`;
-        } else if ('body' in json) {
+        if ('body' in json) {
             if (!Array.isArray(json.body)) {
                 string += this._generateBodyElement(lvl, json.body, true, inline);
             } else {

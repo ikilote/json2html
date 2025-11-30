@@ -291,9 +291,7 @@ describe('Json2html', () => {
             };
             const html = new Json2html(json, { removeOptionalEndTags: true }).toString();
 
-            expect(html).toContain('<li>');
-            expect(html).not.toContain('</li>');
-            expect(html.replace('\t', '_')).toBe(`<ul>
+            expect(html).toBe(`<ul>
     <li>
         Item 1
     <li>
@@ -389,6 +387,123 @@ describe('Json2html', () => {
             const html = new Json2html(json, { indent: false }).toString();
 
             expect(html).toBe(`<div>\n<span>\nHi\n</span>\n</div>`);
+        });
+    });
+
+    describe('Complex Body Logic (Attached & Recursion)', () => {
+        it('should handle "attached" property safely on the first element', () => {
+            const json = {
+                tag: 'div',
+                body: [{ annotation: 'else', attached: true, body: 'content' }],
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe(`<div>
+    @else {
+        content
+    }
+</div>`);
+        });
+
+        it('should NOT attach if previous element is NOT an annotation', () => {
+            const json = {
+                tag: 'div',
+                body: [
+                    { tag: 'span', body: 'text' },
+                    { annotation: 'else', attached: true, body: 'content' },
+                ],
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe(`<div>
+    <span>
+        text
+    </span>
+    @else {
+        content
+    }
+</div>`);
+        });
+
+        it('should NOT attach if previous annotation is a value annotation', () => {
+            const json = {
+                tag: 'div',
+                body: [
+                    { annotation: 'let', value: 'x = 1' },
+                    { annotation: 'else', attached: true, body: 'content' },
+                ],
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe(`<div>
+    @let x = 1;
+    @else {
+        content
+    }
+</div>`);
+        });
+
+        it('should attach correctly if previous is a block annotation', () => {
+            const json = [
+                { annotation: 'if', conditional: 'cond', body: 'A' },
+                { annotation: 'else', attached: true, body: 'B' },
+            ];
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe(`@if (cond) {\n    A\n} @else {\n    B\n}`);
+        });
+
+        it('should handle direct CDATA structure passing through body generation', () => {
+            const weirdJson = {
+                tag: 'div',
+                body: { cdata: 'Direct CDATA' },
+            };
+            const html = new Json2html(weirdJson).toString();
+            expect(html).toBe(`<div>\n    <![CDATA[Direct CDATA]]>\n</div>`);
+        });
+
+        it('should handle direct comment structure passing through root generation', () => {
+            const weirdJson = {
+                comment: 'comment',
+            };
+            const html = new Json2html(weirdJson).toString();
+            expect(html).toContain(`<!-- comment -->`);
+        });
+
+        it('should handle direct comment structure passing through body generation', () => {
+            const weirdJson = {
+                tag: 'div',
+                body: { comment: 'comment' },
+            };
+            const html = new Json2html(weirdJson).toString();
+            expect(html).toBe(`<div>\n    <!-- comment -->\n</div>`);
+        });
+
+        it('should handle direct CDATA structure passing through root generation', () => {
+            const weirdJson = {
+                cdata: 'Direct CDATA',
+            };
+            const html = new Json2html(weirdJson).toString();
+            expect(html).toContain(`<![CDATA[Direct CDATA]]>`);
+        });
+
+        it('should handle direct EmptyLine passing through body generation', () => {
+            const json = {
+                tag: 'div',
+                body: { emptyLine: 2 },
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe('<div>\n\n\n</div>');
+        });
+
+        it('should handle direct EmptyLine passing through root generation', () => {
+            const json = {
+                emptyLine: 2,
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe('\n\n');
         });
     });
 });
