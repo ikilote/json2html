@@ -113,6 +113,8 @@ export interface Json2CdataRef {
 export interface Json2EmptyLine {
     /** Add empty line(s) */
     emptyLine: null | number;
+    /** hide */
+    hide?: boolean;
 }
 
 export interface Json2htmlOptions {
@@ -603,7 +605,7 @@ export class Json2html {
      * @param inline inline
      * @returns render of string
      */
-    private _formatText(lvl: number, string: string, inline: boolean = false): string {
+    private _formatText(lvl: number, string: string, inline: boolean): string {
         let formattedText = '';
         const space = this._getSpacing(lvl);
         if (!inline && this.options.maxLength) {
@@ -662,6 +664,8 @@ export class Json2html {
      * @returns empty lines
      */
     private emptyLines(element: Json2EmptyLine, inline: boolean): string {
-        return inline ? '' : '\n'.repeat(+element.emptyLine && +element.emptyLine > 1 ? +element.emptyLine : 1);
+        return inline || element.hide
+            ? ''
+            : '\n'.repeat(+element.emptyLine && +element.emptyLine > 1 ? +element.emptyLine : 1);
     }
 }

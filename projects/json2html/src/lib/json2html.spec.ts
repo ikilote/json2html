@@ -228,6 +228,20 @@ describe('Json2html', () => {
             tag: 'div',
             attrs: { id: 'main', class: 'container', 'data-test': 'value', role: 'button' },
         };
+        const complexAttrs2 = {
+            tag: 'body',
+            body: {
+                tag: 'figure',
+                attrs: {
+                    class: null,
+                    role: 'main',
+                    datalist: 'test',
+                    style: 'margin: 40px; test-align: center',
+                    'data-group': 'main',
+                    'data-item': 'test',
+                },
+            },
+        };
 
         it('should format attributes with "prettier" style', () => {
             const html = new Json2html(complexAttrs, {
@@ -235,7 +249,23 @@ describe('Json2html', () => {
                 indent: true,
             }).toString();
 
-            expect(html).toContain(`div\n    id="main"\n    class="container"`);
+            expect(html).toBe(`<div
+    id="main"
+    class="container"
+    data-test="value"
+    role="button"
+></div>`);
+        });
+
+        it('should format attributes with "prettier" style ans indent false', () => {
+            const html = new Json2html(complexAttrs2, {
+                attrPosition: 'prettier',
+                indent: false,
+            }).toString();
+
+            expect(html).toBe(`<body>
+<figure class role="main" datalist="test" style="margin: 40px; test-align: center" data-group="main" data-item="test" ></figure>
+</body>`);
         });
 
         it('should handle "inline space" alignment', () => {
@@ -243,7 +273,10 @@ describe('Json2html', () => {
                 attrPosition: 'inline space',
                 maxLength: 20, // Force wrap
             }).toString();
-            expect(html).toContain('div id="main"');
+            expect(html).toBe(`<div id="main"
+    class="container"
+    data-test="value"
+    role="button"></div>`);
         });
 
         it('should handle null/undefined attributes', () => {
@@ -293,42 +326,14 @@ describe('Json2html', () => {
         });
 
         it('should handle "inline space" alignment', () => {
-            const json = {
-                tag: 'body',
-                body: {
-                    tag: 'figure',
-                    attrs: {
-                        class: null,
-                        role: 'main',
-                        datalist: 'test',
-                        style: 'margin: 40px; test-align: center',
-                        'data-group': 'main',
-                        'data-item': 'test',
-                    },
-                },
-            };
-            const html = new Json2html(json, { attrPosition: 'inline space' }).toString();
+            const html = new Json2html(complexAttrs2, { attrPosition: 'inline space' }).toString();
             expect(html).toBe(`<body>
     <figure class role="main" datalist="test" style="margin: 40px; test-align: center" data-group="main" data-item="test"></figure>
 </body>`);
         });
 
         it('should handle "inline space" alignment with maxLength:80', () => {
-            const json = {
-                tag: 'body',
-                body: {
-                    tag: 'figure',
-                    attrs: {
-                        class: null,
-                        role: 'main',
-                        datalist: 'test',
-                        style: 'margin: 40px; test-align: center',
-                        'data-group': 'main',
-                        'data-item': 'test',
-                    },
-                },
-            };
-            const html = new Json2html(json, { attrPosition: 'inline space', maxLength: 80 }).toString();
+            const html = new Json2html(complexAttrs2, { attrPosition: 'inline space', maxLength: 80 }).toString();
             expect(html).toBe(`<body>
     <figure class role="main" datalist="test"
         style="margin: 40px; test-align: center" data-group="main"
@@ -337,42 +342,14 @@ describe('Json2html', () => {
         });
 
         it('should handle "inline alignTag" alignment', () => {
-            const json = {
-                tag: 'body',
-                body: {
-                    tag: 'figure',
-                    attrs: {
-                        class: null,
-                        role: 'main',
-                        datalist: 'test',
-                        style: 'margin: 40px; test-align: center',
-                        'data-group': 'main',
-                        'data-item': 'test',
-                    },
-                },
-            };
-            const html = new Json2html(json, { attrPosition: 'inline alignTag' }).toString();
+            const html = new Json2html(complexAttrs2, { attrPosition: 'inline alignTag' }).toString();
             expect(html).toBe(`<body>
     <figure class role="main" datalist="test" style="margin: 40px; test-align: center" data-group="main" data-item="test"></figure>
 </body>`);
         });
 
         it('should handle "inline alignTag" alignment with maxLength:80', () => {
-            const json = {
-                tag: 'body',
-                body: {
-                    tag: 'figure',
-                    attrs: {
-                        class: null,
-                        role: 'main',
-                        datalist: 'test',
-                        style: 'margin: 40px; test-align: center',
-                        'data-group': 'main',
-                        'data-item': 'test',
-                    },
-                },
-            };
-            const html = new Json2html(json, { attrPosition: 'inline alignTag', maxLength: 80 }).toString();
+            const html = new Json2html(complexAttrs2, { attrPosition: 'inline alignTag', maxLength: 80 }).toString();
             expect(html).toBe(`<body>
     <figure class role="main" datalist="test"
      style="margin: 40px; test-align: center" data-group="main"
@@ -381,42 +358,17 @@ describe('Json2html', () => {
         });
 
         it('should handle "inline alignFirstAttr" alignment', () => {
-            const json = {
-                tag: 'body',
-                body: {
-                    tag: 'figure',
-                    attrs: {
-                        class: null,
-                        role: 'main',
-                        datalist: 'test',
-                        style: 'margin: 40px; test-align: center',
-                        'data-group': 'main',
-                        'data-item': 'test',
-                    },
-                },
-            };
-            const html = new Json2html(json, { attrPosition: 'inline alignFirstAttr' }).toString();
+            const html = new Json2html(complexAttrs2, { attrPosition: 'inline alignFirstAttr' }).toString();
             expect(html).toBe(`<body>
     <figure class role="main" datalist="test" style="margin: 40px; test-align: center" data-group="main" data-item="test"></figure>
 </body>`);
         });
 
         it('should handle "inline alignFirstAttr" alignment with maxLength:80', () => {
-            const json = {
-                tag: 'body',
-                body: {
-                    tag: 'figure',
-                    attrs: {
-                        class: null,
-                        role: 'main',
-                        datalist: 'test',
-                        style: 'margin: 40px; test-align: center',
-                        'data-group': 'main',
-                        'data-item': 'test',
-                    },
-                },
-            };
-            const html = new Json2html(json, { attrPosition: 'inline alignFirstAttr', maxLength: 80 }).toString();
+            const html = new Json2html(complexAttrs2, {
+                attrPosition: 'inline alignFirstAttr',
+                maxLength: 80,
+            }).toString();
             expect(html).toBe(`<body>
     <figure class role="main" datalist="test"
             style="margin: 40px; test-align: center" data-group="main"
@@ -428,8 +380,7 @@ describe('Json2html', () => {
             const json = { tag: 'div', attrs: { test: ['btn', 'btn-primary'] } };
             const html = new Json2html(json).toString();
 
-            expect(html).toContain('test="btn"');
-            expect(html).toContain('test="btn-primary"');
+            expect(html).toBe('<div test="btn" test="btn-primary"></div>');
         });
 
         it('should handle boolean attributes (true/null)', () => {
@@ -438,20 +389,123 @@ describe('Json2html', () => {
 
             expect(html).toBe('<input required="true" disabled type="text">');
         });
+
+        it('should handle parameter with wrapAttrNumber (superior)', () => {
+            const html = new Json2html(complexAttrs, {
+                attrPosition: 'alignFirstAttr',
+                wrapAttrNumber: 5,
+            }).toString();
+            expect(html).toBe(`<div id="main" class="container" data-test="value" role="button"></div>`);
+        });
+
+        it('should handle parameter with wrapAttrNumber (inferior)', () => {
+            const html = new Json2html(complexAttrs, {
+                attrPosition: 'alignFirstAttr',
+                wrapAttrNumber: 3,
+            }).toString();
+            expect(html).toBe(`<div id="main"
+     class="container"
+     data-test="value"
+     role="button"></div>`);
+        });
+
+        it('should handle parameter with wrapAttrNumber (edge value)', () => {
+            const html = new Json2html(complexAttrs, {
+                attrPosition: 'alignFirstAttr',
+                wrapAttrNumber: undefined,
+            }).toString();
+            expect(html).toBe(`<div id="main"
+     class="container"
+     data-test="value"
+     role="button"></div>`);
+        });
     });
 
     describe('Text Formatting & MaxLength', () => {
+        const longText1 = 'This is a very long text that should be wrapped because it exceeds the limit';
+        const longText2 =
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+
         it('should wrap long text when maxLength is set', () => {
-            const longText = 'This is a very long text that should be wrapped because it exceeds the limit';
+            const longText = longText1;
             const json = { tag: 'p', body: longText };
             const html = new Json2html(json, {
                 maxLength: 20,
                 formatting: 'multiline',
             }).toString();
 
-            expect(html).toContain('\n');
-            const lines = html.split('\n');
-            expect(lines.length).toBeGreaterThan(3);
+            expect(html).toBe(`<p>
+    This is a very
+    long text that
+    should be
+    wrapped because
+    it exceeds the
+    limit
+</p>`);
+        });
+
+        it('should wrap long text when no maxLength is set', () => {
+            const json = {
+                tag: 'div',
+                body: longText2,
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe(`<div>\n    ${longText2}\n</div>`);
+        });
+
+        it('should wrap long text when maxLength is set (2)', () => {
+            const json = {
+                tag: 'div',
+                body: longText2,
+            };
+            const html = new Json2html(json, { maxLength: 80 }).toString();
+
+            expect(html).toBe(`<div>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+    veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+    velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+    cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+    est laborum.
+</div>`);
+        });
+
+        it('should wrap multi texts when maxLength is set', () => {
+            const json = {
+                tag: 'div',
+                body: [longText2, ''],
+            };
+            const html = new Json2html(json, { maxLength: 80 }).toString();
+
+            expect(html).toBe(`<div>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+    veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+    velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+    cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+    est laborum.\n    \n</div>`);
+        });
+
+        it('should wrap multi texts when maxLength is set', () => {
+            const json = {
+                tag: 'div',
+                body: [longText2, longText1],
+            };
+            const html = new Json2html(json, { maxLength: 80 }).toString();
+
+            expect(html).toBe(`<div>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+    veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+    velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+    cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+    est laborum.
+    This is a very long text that should be wrapped because it exceeds the limit
+</div>`);
         });
     });
 
@@ -655,6 +709,34 @@ describe('Json2html', () => {
 }`);
         });
 
+        it('should render with nested annotations', () => {
+            const json = {
+                annotation: 'if',
+                conditional: 'a',
+                body: [
+                    {
+                        annotation: 'if',
+                        conditional: 'b',
+                        body: 'Value A',
+                    },
+                    {
+                        annotation: 'else',
+                        body: 'Value B',
+                        attached: true,
+                    },
+                ],
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe(`@if (a) {
+    @if (b) {
+        Value A
+    } @else {
+        Value B
+    }
+}`);
+        });
+
         it('should render attached annotations (mix contents)', () => {
             const json = [
                 {
@@ -791,16 +873,9 @@ describe('Json2html', () => {
 
             expect(html).toBe(`@if (cond) {\n    A\n} @else {\n    B\n}`);
         });
+    });
 
-        it('should handle direct CDATA structure passing through body generation', () => {
-            const weirdJson = {
-                tag: 'div',
-                body: { cdata: 'Direct CDATA' },
-            };
-            const html = new Json2html(weirdJson).toString();
-            expect(html).toBe(`<div>\n    <![CDATA[Direct CDATA]]>\n</div>`);
-        });
-
+    describe('Comment', () => {
         it('should handle direct comment structure passing through root generation', () => {
             const weirdJson = {
                 comment: 'comment',
@@ -817,6 +892,17 @@ describe('Json2html', () => {
             const html = new Json2html(weirdJson).toString();
             expect(html).toBe(`<div>\n    <!-- comment -->\n</div>`);
         });
+    });
+
+    describe('CDATA', () => {
+        it('should handle direct CDATA structure passing through body generation', () => {
+            const weirdJson = {
+                tag: 'div',
+                body: { cdata: 'Direct CDATA' },
+            };
+            const html = new Json2html(weirdJson).toString();
+            expect(html).toBe(`<div>\n    <![CDATA[Direct CDATA]]>\n</div>`);
+        });
 
         it('should handle direct CDATA structure passing through root generation', () => {
             const weirdJson = {
@@ -825,7 +911,9 @@ describe('Json2html', () => {
             const html = new Json2html(weirdJson).toString();
             expect(html).toContain(`<![CDATA[Direct CDATA]]>`);
         });
+    });
 
+    describe('EmptyLine', () => {
         it('should handle direct EmptyLine passing through body generation', () => {
             const json = {
                 tag: 'div',
@@ -843,6 +931,45 @@ describe('Json2html', () => {
             const html = new Json2html(json).toString();
 
             expect(html).toBe('\n\n');
+        });
+
+        it('should handle direct EmptyLine passing through root generation (0 line)', () => {
+            const json = {
+                emptyLine: 0, // ignore
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe('\n');
+        });
+
+        it('should handle direct EmptyLine passing through root generation with bad value', () => {
+            const json = {
+                emptyLine: -1, // bad value
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe('\n');
+        });
+
+        it('should handle direct EmptyLine has ignore with inline option', () => {
+            const json = {
+                tag: 'div',
+                body: { emptyLine: 2 },
+                inline: true,
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe('<div></div>');
+        });
+
+        it('should handle direct EmptyLine passing through root generation and hide block', () => {
+            const json = {
+                emptyLine: 45,
+                hide: true,
+            };
+            const html = new Json2html(json).toString();
+
+            expect(html).toBe('');
         });
     });
 });
