@@ -21,15 +21,13 @@ describe('Json2html', () => {
         it('should render attributes correctly', () => {
             const json = { tag: 'div', attrs: { class: 'container', id: 'main' } };
             const html = new Json2html(json).toString();
-            expect(html).toBe(`<div class="container"
-     id="main"></div>`);
+            expect(html).toBe(`<div class="container"\n     id="main"></div>`);
         });
 
         it('should render a self-closing tag', () => {
             const json = { tag: 'img', attrs: { src: 'image.png', alt: 'Image' } };
             const html = new Json2html(json).toString();
-            expect(html).toBe(`<img src="image.png"
-     alt="Image">`);
+            expect(html).toBe(`<img src="image.png"\n     alt="Image">`);
         });
 
         it('should render a self-closing tag inline', () => {
@@ -53,8 +51,7 @@ describe('Json2html', () => {
         it('should handle null/undefined attributes', () => {
             const json = { tag: 'div', attrs: { class: null, id: undefined, role: 'main' } };
             const html = new Json2html(json).toString();
-            expect(html).toBe(`<div class
-     role="main"></div>`);
+            expect(html).toBe(`<div class\n     role="main"></div>`);
         });
     });
 
@@ -247,6 +244,184 @@ describe('Json2html', () => {
                 maxLength: 20, // Force wrap
             }).toString();
             expect(html).toContain('div id="main"');
+        });
+
+        it('should handle null/undefined attributes', () => {
+            const json = { tag: 'body', body: { tag: 'div', attrs: { class: null, role: 'main', datalist: 'test' } } };
+            const html = new Json2html(json, { attrPosition: 'alignTag' }).toString();
+            expect(html).toBe(`<body>
+    <div class
+     role="main"
+     datalist="test"></div>
+</body>`);
+        });
+
+        it('should handle "alignFirstAttr" alignment (div)', () => {
+            const json = { tag: 'body', body: { tag: 'div', attrs: { class: null, role: 'main', datalist: 'test' } } };
+            const html = new Json2html(json, { attrPosition: 'alignFirstAttr' }).toString();
+            expect(html).toBe(`<body>
+    <div class
+         role="main"
+         datalist="test"></div>
+</body>`);
+        });
+
+        it('should handle "alignFirstAttr" alignment (figure)', () => {
+            const json = {
+                tag: 'body',
+                body: { tag: 'figure', attrs: { class: null, role: 'main', datalist: 'test' } },
+            };
+            const html = new Json2html(json, { attrPosition: 'alignFirstAttr' }).toString();
+            expect(html).toBe(`<body>
+    <figure class
+            role="main"
+            datalist="test"></figure>
+</body>`);
+        });
+
+        it('should handle "space" alignment', () => {
+            const json = {
+                tag: 'body',
+                body: { tag: 'figure', attrs: { class: null, role: 'main', datalist: 'test' } },
+            };
+            const html = new Json2html(json, { attrPosition: 'space' }).toString();
+            expect(html).toBe(`<body>
+    <figure class
+        role="main"
+        datalist="test"></figure>
+</body>`);
+        });
+
+        it('should handle "inline space" alignment', () => {
+            const json = {
+                tag: 'body',
+                body: {
+                    tag: 'figure',
+                    attrs: {
+                        class: null,
+                        role: 'main',
+                        datalist: 'test',
+                        style: 'margin: 40px; test-align: center',
+                        'data-group': 'main',
+                        'data-item': 'test',
+                    },
+                },
+            };
+            const html = new Json2html(json, { attrPosition: 'inline space' }).toString();
+            expect(html).toBe(`<body>
+    <figure class role="main" datalist="test" style="margin: 40px; test-align: center" data-group="main" data-item="test"></figure>
+</body>`);
+        });
+
+        it('should handle "inline space" alignment with maxLength:80', () => {
+            const json = {
+                tag: 'body',
+                body: {
+                    tag: 'figure',
+                    attrs: {
+                        class: null,
+                        role: 'main',
+                        datalist: 'test',
+                        style: 'margin: 40px; test-align: center',
+                        'data-group': 'main',
+                        'data-item': 'test',
+                    },
+                },
+            };
+            const html = new Json2html(json, { attrPosition: 'inline space', maxLength: 80 }).toString();
+            expect(html).toBe(`<body>
+    <figure class role="main" datalist="test"
+        style="margin: 40px; test-align: center" data-group="main"
+        data-item="test"></figure>
+</body>`);
+        });
+
+        it('should handle "inline alignTag" alignment', () => {
+            const json = {
+                tag: 'body',
+                body: {
+                    tag: 'figure',
+                    attrs: {
+                        class: null,
+                        role: 'main',
+                        datalist: 'test',
+                        style: 'margin: 40px; test-align: center',
+                        'data-group': 'main',
+                        'data-item': 'test',
+                    },
+                },
+            };
+            const html = new Json2html(json, { attrPosition: 'inline alignTag' }).toString();
+            expect(html).toBe(`<body>
+    <figure class role="main" datalist="test" style="margin: 40px; test-align: center" data-group="main" data-item="test"></figure>
+</body>`);
+        });
+
+        it('should handle "inline alignTag" alignment with maxLength:80', () => {
+            const json = {
+                tag: 'body',
+                body: {
+                    tag: 'figure',
+                    attrs: {
+                        class: null,
+                        role: 'main',
+                        datalist: 'test',
+                        style: 'margin: 40px; test-align: center',
+                        'data-group': 'main',
+                        'data-item': 'test',
+                    },
+                },
+            };
+            const html = new Json2html(json, { attrPosition: 'inline alignTag', maxLength: 80 }).toString();
+            expect(html).toBe(`<body>
+    <figure class role="main" datalist="test"
+     style="margin: 40px; test-align: center" data-group="main"
+     data-item="test"></figure>
+</body>`);
+        });
+
+        it('should handle "inline alignFirstAttr" alignment', () => {
+            const json = {
+                tag: 'body',
+                body: {
+                    tag: 'figure',
+                    attrs: {
+                        class: null,
+                        role: 'main',
+                        datalist: 'test',
+                        style: 'margin: 40px; test-align: center',
+                        'data-group': 'main',
+                        'data-item': 'test',
+                    },
+                },
+            };
+            const html = new Json2html(json, { attrPosition: 'inline alignFirstAttr' }).toString();
+            expect(html).toBe(`<body>
+    <figure class role="main" datalist="test" style="margin: 40px; test-align: center" data-group="main" data-item="test"></figure>
+</body>`);
+        });
+
+        it('should handle "inline alignFirstAttr" alignment with maxLength:80', () => {
+            const json = {
+                tag: 'body',
+                body: {
+                    tag: 'figure',
+                    attrs: {
+                        class: null,
+                        role: 'main',
+                        datalist: 'test',
+                        style: 'margin: 40px; test-align: center',
+                        'data-group': 'main',
+                        'data-item': 'test',
+                    },
+                },
+            };
+            const html = new Json2html(json, { attrPosition: 'inline alignFirstAttr', maxLength: 80 }).toString();
+            expect(html).toBe(`<body>
+    <figure class role="main" datalist="test"
+            style="margin: 40px; test-align: center" data-group="main"
+            data-item="test"></figure>
+</body>`);
         });
 
         it('should handle array of attributes', () => {

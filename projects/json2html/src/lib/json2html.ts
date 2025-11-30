@@ -294,7 +294,7 @@ export class Json2html {
      * @param inline force inline
      * @returns render of node
      */
-    private _generateAnnotation(lvl: number, json: Json2annotationRef | Json2annotationValue, inline: boolean = false) {
+    private _generateAnnotation(lvl: number, json: Json2annotationRef | Json2annotationValue, inline: boolean) {
         if ('value' in json) {
             return `@${json.annotation} ${json.value};`;
         } else {
@@ -317,7 +317,7 @@ export class Json2html {
      * @param inline force inline
      * @returns render of node
      */
-    private _generateXmlAttr(lvl: number, json: Json2XmlRef, inline: boolean = false) {
+    private _generateXmlAttr(lvl: number, json: Json2XmlRef, inline: boolean) {
         return `<?xml${this._generateAttrs(
             lvl,
             {
@@ -335,7 +335,7 @@ export class Json2html {
      * @param inline force inline
      * @returns render of node
      */
-    private _generateTag(lvl: number, json: Json2htmlRef, inline: boolean = false): string {
+    private _generateTag(lvl: number, json: Json2htmlRef, inline: boolean): string {
         const tagWithContent = !this.options.noContentTags.includes(json.tag.toLowerCase());
         const content = this.hasContent(json);
         const webComponentSelfClosing =
