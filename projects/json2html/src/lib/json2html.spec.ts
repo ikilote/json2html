@@ -31,6 +31,40 @@ describe('Json2html', () => {
     
 </div>`);
         });
+
+        it('should handle body as direct empty string', () => {
+            const json = { tag: 'div', body: '' };
+            const html = new Json2html(json).toString();
+            expect(html).toBe(`<div>
+    
+</div>`);
+        });
+
+        it('should handle body as direct non-empty string', () => {
+            const json = { tag: 'div', body: 'Hello' };
+            const html = new Json2html(json).toString();
+            expect(html).toBe(`<div>
+    Hello
+</div>`);
+        });
+
+        it('should handle body as object (nested tag)', () => {
+            const json = { tag: 'div', body: { tag: 'span', body: 'content' } };
+            const html = new Json2html(json).toString();
+            expect(html).toBe(`<div>
+    <span>
+        content
+    </span>
+</div>`);
+        });
+
+        it('should NOT self-close web component with empty string body', () => {
+            const json = { tag: 'my-component', body: '' };
+            const html = new Json2html(json, { webComponentSelfClosing: true }).toString();
+            expect(html).toBe(`<my-component>
+    
+</my-component>`);
+        });
     });
 
     describe('Attribute Rendering', () => {

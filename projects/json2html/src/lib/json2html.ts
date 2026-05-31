@@ -394,14 +394,16 @@ export class Json2html {
      * @returns has content
      */
     private hasContent(json: Json2htmlRef) {
-        if (json.body) {
+        if (json.body !== undefined && json.body !== null) {
             if (Array.isArray(json.body)) {
                 if (json.body.length > 1) {
                     return true;
                 } else if (json.body.length === 1) {
                     return !!json.body[0];
                 }
-            } else if (typeof json.body === 'object' || (typeof json.body === 'string' && json.body)) {
+            } else {
+                // If not an array, and not undefined/null, then it has content
+                // (object, string, or any other type)
                 return true;
             }
         }
