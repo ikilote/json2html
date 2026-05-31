@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { Json2Js } from './json2js';
 
 describe('Json2Js', () => {

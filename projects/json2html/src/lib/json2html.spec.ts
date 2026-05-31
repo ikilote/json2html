@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { Json2html } from './json2html';
 
 describe('Json2html', () => {
@@ -14,6 +16,20 @@ describe('Json2html', () => {
             const json = { tag: 'br' };
             const html = new Json2html(json).toString();
             expect(html).toBe(`<br>`);
+        });
+
+        it('should handle body as empty array', () => {
+            const json = { tag: 'div', body: [] };
+            const html = new Json2html(json).toString();
+            expect(html).toBe('<div></div>');
+        });
+
+        it('should handle body as single falsy empty string in array', () => {
+            const json = { tag: 'div', body: [''] };
+            const html = new Json2html(json).toString();
+            expect(html).toBe(`<div>
+    
+</div>`);
         });
     });
 
@@ -76,6 +92,12 @@ describe('Json2html', () => {
             expect(html).toBe(`@If (true) {
     <div></div>
 }`);
+        });
+
+        it('should handle annotation with inline formatting', () => {
+            const json = { annotation: 'if', conditional: 'test', body: 'content', inline: true };
+            const html = new Json2html(json, { formatting: 'inline' }).toString();
+            expect(html).toBe('@if (test) {content}');
         });
     });
 
