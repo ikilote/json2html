@@ -19,7 +19,7 @@ export class Json2Js {
         const tabSize = Math.max(this.options.tabSize ?? 4, 0);
         const tabAdded = Math.max(this.options.tabAdded ?? 0, 0);
         const tabAddedExceptFirst = this.options.tabAddedExceptFirst ?? false;
-        /* Local RegExp in order to limit impact on browsers without lookbehind support (ex : Safari) */
+        /* Uses lookbehind assertion (?<!: ) which is supported in modern browsers (Chrome 62+, Firefox 78+, Safari 16.4+) */
         const backTickReplaceRegex = new RegExp("(?!\\s*.+'?: ['\"].*)((?<!: )`(?!,|\n))(?!.*['\"],?\n)", 'g');
 
         try {
@@ -38,9 +38,7 @@ export class Json2Js {
                     .replace(/([\]}])$/g, ' '.repeat(tabSize * tabAdded) + '$1')
             );
         } catch (e) {
-            const error = new Error('Json2Js: impossible to transform');
-            error.stack = e.stack;
-            throw error;
+            throw new Error('Json2Js: impossible to transform', { cause: e });
         }
     }
 }
