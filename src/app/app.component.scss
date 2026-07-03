@@ -1,8 +1,20 @@
+nav {
+    margin: 10px;
+
+    img {
+        vertical-align: sub;
+        margin-top: 5px;
+        margin-left: 15px;
+    }
+}
+
 main {
     display: flex;
+    flex-wrap: wrap;
 
     & > * {
         flex: 1;
+        min-width: 300px;
     }
 }
 
@@ -18,10 +30,6 @@ mg-input-error pre {
 
 .options {
     max-width: min-content;
-
-    > div {
-        width: 500px;
-    }
 }
 
 .opt label {

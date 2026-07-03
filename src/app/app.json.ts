@@ -1,4 +1,4 @@
-import { Json2htmlObject } from 'projects/json2html/src/public_api';
+import { Json2htmlObject } from '../../projects/json2html/src/public_api';
 
 export const examples: Json2htmlObject[] = [
     [

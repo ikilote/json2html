@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { Json2Js } from 'projects/json2html/src/public_api';
+import { Json2Js } from '../../projects/json2html/src/public_api';
 
 @Pipe({
     name: 'js',

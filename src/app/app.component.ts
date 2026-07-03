@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { jsonParse } from '@ikilote/magma';
 
-import { Json2html, Json2htmlObject, Json2htmlOptions } from 'projects/json2html/src/public_api';
-
 import { examples } from './app.json';
+
+import { Json2html, Json2htmlObject, Json2htmlOptions } from '../../projects/json2html/src/public_api';
 
 @Component({
     selector: 'app-root',
